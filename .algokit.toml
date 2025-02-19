@@ -1,0 +1,23 @@
+[algokit]
+min_version = "v2.0.0"
+
+[generate.smart-contract]
+description = "Generate a new smart contract for existing project"
+path = ".algokit/generators/create_contract"
+
+[generate.env-file]
+description = "Generate a new generic or Algorand network specific .env file"
+path = ".algokit/generators/create_env_file"
+
+[project]
+type = 'contract'
+name = 'store-kit'
+artifacts = 'lib'
+
+[project.run]
+build = { commands = [
+  'npm run build --if-present',
+], description = 'Build all smart contracts in the project' }
+lint = { commands = [
+  'npm run lint --if-present'
+], description = 'Perform linting' }

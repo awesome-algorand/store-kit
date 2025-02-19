@@ -1,0 +1,51 @@
+{
+  "name": "@awesome-algorand/store-kit",
+  "version": "0.0.1",
+  "description": "Reflectivity Contract",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./lodash": {
+      "types": "./lib/Lodash.d.ts",
+      "default": "./lib/Lodash.js"
+    },
+    "./lodash.arc32.json": "./lib/Lodash.arc32.json",
+    "./lodash.approval.teal": "./lib/Lodash.approval.teal",
+    "./lodash.clear.teal": "./lib/Lodash.clear.teal"
+  },
+  "scripts": {
+    "build": "npm run artifacts && npm run generate && tsc",
+    "artifacts": "concurrently \"npm run artifacts:*\"",
+    "artifacts:lodash": "algokit compile python ./contracts/lodash.py --out-dir ../lib/ --output-arc32 --output-source-map",
+    "generate": "mkdir -p src && concurrently \"npm run generate:*\"",
+    "generate:lodash": "algokit generate client -l typescript -o src/Lodash.ts ./lib/Lodash.arc32.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Awesome Algorand",
+  "contributors": [
+    "aorumbayev",
+    "Zero"
+  ],
+  "license": "Unlicense",
+  "peerDependencies": {
+    "@algorandfoundation/algokit-utils": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/lodash.get": "^4.4.9",
+    "@types/lodash.set": "^4.3.9",
+    "@types/node": "^22.13.4",
+    "concurrently": "^9.1.2",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@tanstack/store": "^0.7.0",
+    "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2"
+  }
+}

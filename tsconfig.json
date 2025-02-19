@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": true,
+    "declaration": true,
+    "outDir": "./lib"
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "lib",
+    "test/**/*.ts",
+    "**/*.test.ts",
+    "**/*.bench.ts"
+  ],
+}
