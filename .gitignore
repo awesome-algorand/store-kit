@@ -1,4 +1,6 @@
-src/Lodash.ts
+docs
+
+src/lodash/client.ts
 # TODO: ignore library once it is published
 # lib
 

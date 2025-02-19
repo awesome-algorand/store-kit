@@ -1,6 +1,6 @@
 {
   "name": "@awesome-algorand/store-kit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Reflectivity Contract",
   "files": [
     "lib",
@@ -11,9 +11,13 @@
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
+    "./objects": {
+      "types": "./lib/objects.d.ts",
+      "default": "./lib/objects.js"
+    },
     "./lodash": {
-      "types": "./lib/Lodash.d.ts",
-      "default": "./lib/Lodash.js"
+      "types": "./lib/lodash.d.ts",
+      "default": "./lib/lodash.js"
     },
     "./lodash.arc32.json": "./lib/Lodash.arc32.json",
     "./lodash.approval.teal": "./lib/Lodash.approval.teal",
@@ -24,7 +28,8 @@
     "artifacts": "concurrently \"npm run artifacts:*\"",
     "artifacts:lodash": "algokit compile python ./contracts/lodash.py --out-dir ../lib/ --output-arc32 --output-source-map",
     "generate": "mkdir -p src && concurrently \"npm run generate:*\"",
-    "generate:lodash": "algokit generate client -l typescript -o src/Lodash.ts ./lib/Lodash.arc32.json",
+    "generate:lodash": "algokit generate client -l typescript -o src/lodash/client.ts ./lib/Lodash.arc32.json",
+    "docs": "typedoc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Awesome Algorand",
@@ -41,6 +46,7 @@
     "@types/lodash.set": "^4.3.9",
     "@types/node": "^22.13.4",
     "concurrently": "^9.1.2",
+    "typedoc": "^0.27.7",
     "typescript": "^5.7.3"
   },
   "dependencies": {

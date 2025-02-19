@@ -20,4 +20,12 @@
     "**/*.test.ts",
     "**/*.bench.ts"
   ],
+  "typedocOptions": {
+    "projectDocuments": ["src/*.md"],
+    "entryPoints": [
+      "src/index.ts",
+      "src/objects/index.ts",
+      "src/lodash/index.ts",
+    ],
+  }
 }
