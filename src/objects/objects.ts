@@ -1,8 +1,10 @@
 import get from "lodash.get";
 
-const MAX_BOX_SIZE = 1024 * 32
-const MAX_KEY_SIZE = 64
-
+const MAX_BOX_SIZE = 1024n * 32n
+const MAX_KEY_SIZE = 64n
+const MIN_BALANCE = 100_000n
+const PER_BOX = 2500n
+const PER_UNIT = 400n
 /**
  * Represents an error that occurs when the size of an object `key` or `value` exceeds the maximum allowed size.
  */
@@ -17,7 +19,7 @@ export class MaxSizeError extends TypeError {
  * Calculates the minimum balance requirement (MBR) for an object.
  *
  * @param {any} obj The object for which to calculate the MBR.
- * @param {(string|undefined)[]} paths Precomputed paths of the object.
+ * @param {(string|undefined)[]} pathsCache Precomputed paths of the object.
  *
  * @throws {TypeError} Throws a `TypeError` if the object is undefined.
  * @throws {MaxSizeError} Throws a {@link MaxSizeError} if the object key or value exceeds the maximum size.
@@ -46,32 +48,32 @@ export class MaxSizeError extends TypeError {
  * const mbr = toMBR(obj, paths)
  * ```
  */
-export function toMBR(obj: any, paths?: (string|undefined)[]): bigint {
+export function toMBR(obj: any, pathsCache?: (string|undefined)[]): bigint {
   if(typeof obj === 'undefined') {
     throw new TypeError("Object is required")
   }
-  if(typeof paths === 'undefined') {
-    paths = toPaths(obj)
+  let paths
+  if(typeof pathsCache === 'undefined') {
+    paths = toPaths(obj).filter(path => typeof path !== 'undefined')
   } else {
-    paths = paths.filter(path => typeof path !== 'undefined')
+    paths = pathsCache.filter(path => typeof path !== 'undefined')
   }
   const baseLine = BigInt(2500)
   const multiplier = BigInt(400)
   const encoder = new TextEncoder()
-
   return paths.reduce((acc, path) => {
-    const keySize = BigInt(encoder.encode(path).length)
-    if(keySize > BigInt(MAX_KEY_SIZE)) {
+    // Key size is the length of the path plus 4 bytes for the prefix
+    const keySize = BigInt(path.length) + 4n
+    if(keySize > MAX_KEY_SIZE) {
       throw new MaxSizeError(`Key size exceeds maximum of ${MAX_KEY_SIZE}`)
     }
 
     const boxSize = BigInt(encoder.encode(get(obj, path || '')).length)
-    if(boxSize > BigInt(MAX_BOX_SIZE)) {
+    if(boxSize > MAX_BOX_SIZE) {
       throw new MaxSizeError(`Box size exceeds maximum of ${MAX_BOX_SIZE}`)
     }
-
     return acc + (baseLine + (multiplier * (keySize + boxSize)))
-  }, BigInt(0))
+  }, BigInt(MIN_BALANCE))
 }
 
 /**

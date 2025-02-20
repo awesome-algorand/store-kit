@@ -8,7 +8,7 @@ export declare class MaxSizeError extends TypeError {
  * Calculates the minimum balance requirement (MBR) for an object.
  *
  * @param {any} obj The object for which to calculate the MBR.
- * @param {(string|undefined)[]} paths Precomputed paths of the object.
+ * @param {(string|undefined)[]} pathsCache Precomputed paths of the object.
  *
  * @throws {TypeError} Throws a `TypeError` if the object is undefined.
  * @throws {MaxSizeError} Throws a {@link MaxSizeError} if the object key or value exceeds the maximum size.
@@ -37,7 +37,7 @@ export declare class MaxSizeError extends TypeError {
  * const mbr = toMBR(obj, paths)
  * ```
  */
-export declare function toMBR(obj: any, paths?: (string | undefined)[]): bigint;
+export declare function toMBR(obj: any, pathsCache?: (string | undefined)[]): bigint;
 /**
  * Recursively generates the paths for all keys in an object or array, formatted as dot notation.
  *

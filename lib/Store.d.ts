@@ -83,16 +83,18 @@ export declare class Store<T> extends BaseStore<T> {
      * Throws an error if already initialized.
      * Deploys the application using the provided factory and performs payment if the result operation requires it.
      *
+     * @param {string} name - The name of the application to deploy.
      * @return {Promise<void>} A promise that resolves when the initialization process is complete.
      * @throws {Error} Throws an error if the method is called more than once.
      */
-    init(): Promise<void>;
+    init(name: string): Promise<void>;
+    toChunks(): (string | undefined)[][];
+    toPaths(): (string | undefined)[];
     /**
      * Saves the current state to the network. This method ensures that the app is initialized
      * and a deployer is provided before attempting to save. It synchronizes the state by mapping
      * paths to their respective values and storing them on-chain.
      *
-     * @param {Deployer} [deployer] - Optional deployer instance if one is not already defined for the object.
      * @return {Promise<void>} Resolves when the state has been successfully saved to the network.
      * @throws {TypeError} Throws an error if the app has not been initialized with a client or if a deployer is not provided.
      * @example
@@ -114,7 +116,7 @@ export declare class Store<T> extends BaseStore<T> {
      * await exampleStore.save(deployer)
      * ```
      */
-    save(deployer?: Deployer): Promise<void>;
+    save(): Promise<void>;
     /**
      * Assembles and retrieves data stored in the storage boxes of an application, decodes the content, and formats it into a structured object.
      *

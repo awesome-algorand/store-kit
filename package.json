@@ -1,11 +1,13 @@
 {
   "name": "@awesome-algorand/store-kit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Reflectivity Contract",
   "files": [
     "lib",
     "src"
   ],
+  "type": "module",
+  "types": "lib/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
@@ -42,12 +44,15 @@
     "@algorandfoundation/algokit-utils": "^8.1.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.5.0",
     "@types/lodash.get": "^4.4.9",
     "@types/lodash.set": "^4.3.9",
     "@types/node": "^22.13.4",
+    "async-mutex": "^0.5.0",
     "concurrently": "^9.1.2",
     "typedoc": "^0.27.7",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.6"
   },
   "dependencies": {
     "@tanstack/store": "^0.7.0",
