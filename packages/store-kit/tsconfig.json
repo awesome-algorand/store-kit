@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": true,
+    "declaration": true,
+    "outDir": "./lib"
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "lib",
+    "test/**/*.ts",
+    "**/*.test.ts",
+    "**/*.fixtures.ts",
+    "**/*.spec.ts",
+    "**/*.bench.ts"
+  ],
+  "references": [
+    {
+      "path": "test/tsconfig.json"
+    }
+  ],
+  "typedocOptions": {
+    "projectDocuments": ["src/*.md"],
+    "entryPoints": [
+      "src/index.ts",
+      "src/objects/index.ts",
+      "src/lodash/index.ts"
+    ]
+  }
+}

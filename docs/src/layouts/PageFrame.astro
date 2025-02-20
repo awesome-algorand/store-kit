@@ -1,0 +1,17 @@
+---
+import Default from '@astrojs/starlight/components/PageFrame.astro';
+import {Modal} from "@/components/wallet/modal.tsx";
+
+const { hasSidebar } = Astro.locals.starlightRoute;
+---
+
+<Default>
+  <slot name="header"  slot="header"/>
+  {
+    hasSidebar && (
+      <slot name="sidebar" slot="sidebar"/>
+    )
+  }
+  <slot />
+  <Modal client:only="react"/>
+</Default>

@@ -1,0 +1,10 @@
+---
+import Default from '@astrojs/starlight/components/TwoColumnContent.astro';
+import {Modal} from "@/components/wallet/modal.tsx";
+---
+
+<Default>
+  <slot />
+  <slot name="right-sidebar" slot="right-sidebar" />
+  <Modal client:only="react"/>
+</Default>

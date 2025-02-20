@@ -1,0 +1,61 @@
+---
+title: Quick Start
+description: Experiment with different objects on-chain
+template: splash
+---
+
+import { Card,  Code, LinkCard, Tabs, TabItem } from '@astrojs/starlight/components';
+import EditorIsland from '@/components/editor.island.tsx';
+import PreviewIsland from '@/components/preview.island.tsx';
+import ControlsIsland from '@/components/controls.island.tsx';
+import CodeIsland from '@/components/code.island.tsx';
+
+<p>This shows a basic example</p>
+
+  <Tabs>
+  <ControlsIsland client:load />
+    <TabItem label="Editor">
+      <EditorIsland client:load/>
+    </TabItem>
+    <TabItem label="Form Preview">
+      <PreviewIsland client:load />
+    </TabItem>
+  </Tabs>
+<h4>Installing</h4>
+<Tabs>
+  <TabItem label="npm">
+    <Code code={`npm install @awesome-algorand/store-kit --save`} lang="bash"/>
+  </TabItem>
+  <TabItem label="pnpm">
+    <Code code={`pnpm add @awesome-algorand/store-kit`} lang="bash"/>
+  </TabItem>
+  <TabItem label="yarn">
+    <Code code={`yarn add @awesome-algorand/store-kit`} lang="bash"/>
+  </TabItem>
+  <TabItem label="bun">
+    <Code code={`bun install @awesome-algorand/store-kit`} lang="bash"/>
+  </TabItem>
+</Tabs>
+<h4>store.ts</h4>
+<Tabs>
+  <TabItem label="@txnlab/use-wallet">
+    <CodeIsland client:load type="txnlab"/>
+  </TabItem>
+  <TabItem label="@algorandfoundation/algokit-utils">
+    <CodeIsland client:load type="algokit"/>
+  </TabItem>
+</Tabs>
+
+<LinkCard
+  title="Find out more"
+  href="/justification"
+  icon="pencil"
+  description="References, detailed guides and more!"
+/>
+
+
+## TODO:
+
+- CRDT Storage or Delta Strategy (Dirty Records)
+- Array/Object index management
+- Bulk Delete Nested Object Keys

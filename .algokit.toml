@@ -21,3 +21,7 @@ build = { commands = [
 lint = { commands = [
   'npm run lint --if-present'
 ], description = 'Perform linting' }
+
+[project.deploy]
+description = 'Deploy the demo contracts to the Algorand network'
+command = 'npx tsx demo.ts'
