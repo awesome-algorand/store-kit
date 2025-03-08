@@ -13,7 +13,7 @@ you can easily store and retrieve data from the blockchain and map it to a more 
 
 ### Why:
 
-By sampling an average user record with a random number of associated locations, we find the following: 
+By sampling an average user record with a random number of associated locations, we find the following:
 ```bash
 Example User: {
   appId: 8355702757352782,
@@ -47,11 +47,11 @@ Deployed with 33.5506 spent
 Final Average: 0.335506
 ```
 
-The MBR is approximately `0.175` ALGO for the general use case which would be reclaimable 
-(possibly by paying customers of the dapps that integrates). 
-Most data requirements are Read heavy which would leverage the REST API. 
-This would allow us to work with native Objects in our preferred language with Reactivity to the on-chain Boxes. 
-It would also preserve and improve on Contract<->Contract integrations 
+The MBR is approximately `0.175` ALGO for the general use case which would be reclaimable
+(possibly by paying customers of the dapps that integrates).
+Most data requirements are Read heavy which would leverage the REST API.
+This would allow us to work with native Objects in our preferred language with Reactivity to the on-chain Boxes.
+It would also preserve and improve on Contract<->Contract integrations
 by having a standardized mapping of the keys to values.
 
 ### How:

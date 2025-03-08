@@ -1,0 +1,14 @@
+import {Store} from '@awesome-algorand/store-kit'
+import {AlgorandClient} from '@algorandfoundation/algokit-utils'
+{{manager}}
+// AlgorandClient from AlgoKit
+export const algorand = AlgorandClient.fromEnvironment()
+
+// Initialize StoreKit
+export const bearStore = new Store({{state}})
+
+// Configure StoreKit and Deploy
+await bearStore
+  .setAlgorand(algorand)
+{{actions}}
+

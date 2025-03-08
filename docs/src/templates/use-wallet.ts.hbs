@@ -1,0 +1,10 @@
+import {WalletManager, WalletId, NetworkId} from "@txnlab/use-wallet";
+{{import}}
+
+// WalletManager from use-wallet
+export const manager = new WalletManager({
+  wallets: [
+    {{wallet}},
+  ],
+  defaultNetwork: NetworkId.{{network}},
+});

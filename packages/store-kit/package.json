@@ -1,0 +1,78 @@
+{
+  "name": "@awesome-algorand/store-kit",
+  "version": "0.0.3",
+  "description": "Reflectivity Contract",
+  "type": "module",
+  "author": "Awesome Algorand",
+  "license": "Unlicense",
+  "contributors": [
+    "aorumbayev",
+    "Zero"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awesome-algorand/store-kit.git",
+    "directory": "packages/store-kit"
+  },
+  "bugs": "https://github.com/awesome-algorand/store-kit/issues",
+  "homepage": "https://storekit.io",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./objects": {
+      "types": "./lib/objects/index.d.ts",
+      "default": "./lib/objects/index.js"
+    },
+    "./lodash": {
+      "types": "./lib/lodash.d.ts",
+      "default": "./lib/lodash.js"
+    },
+    "./lodash.arc32.json": "./lib/Lodash.arc32.json",
+    "./lodash.approval.teal": "./lib/Lodash.approval.teal",
+    "./lodash.clear.teal": "./lib/Lodash.clear.teal"
+  },
+  "scripts": {
+    "build": "npm run artifacts && npm run generate && tsc",
+    "build:watch": "tsc --watch",
+    "artifacts": "concurrently \"npm run artifacts:*\"",
+    "artifacts:lodash": "algokit compile python ../../contracts/lodash.py --out-dir ../packages/store-kit/lib/ --output-arc32 --output-source-map",
+    "generate": "mkdir -p src && concurrently \"npm run generate:*\"",
+    "generate:lodash": "algokit generate client -l typescript -o src/lodash/client.ts ./lib/Lodash.arc32.json",
+    "docs": "typedoc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "@algorandfoundation/algokit-utils": "^8.1.0"
+  },
+  "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@faker-js/faker": "^9.5.0",
+    "@txnlab/use-wallet": "^4.0.0",
+    "@types/lodash.get": "^4.4.9",
+    "@types/lodash.set": "^4.3.9",
+    "@types/node": "^22.13.4",
+    "async-mutex": "^0.5.0",
+    "concurrently": "^9.1.2",
+    "typedoc": "^0.27.7",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.6"
+  },
+  "dependencies": {
+    "@algorandfoundation/algo-models": "^0.0.8",
+    "@jsonforms/react": "^3.5.1",
+    "@jsonforms/vanilla-renderers": "^3.5.1",
+    "@tanstack/store": "^0.7.0",
+    "ajv": "^8.17.1",
+    "chalk": "^5.4.1",
+    "json-edit-react": "^1.23.1",
+    "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2"
+  }
+}

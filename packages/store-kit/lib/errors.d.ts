@@ -1,0 +1,9 @@
+export declare const APPLICATION_ID_REQUIRED = "Application ID is required";
+export declare const ALGORAND_CLIENT_REQUIRED = "AlgorandClient is required";
+export declare const WALLET_MANAGER_REQUIRED = "WalletManager is required";
+export declare const WALLET_MANAGER_EXISTS = "WalletManager is already set";
+export declare const ACTIVE_ADDRESS_REQUIRED = "Active address is required";
+export declare const TYPE_CLIENT_FACTORY_REQUIRED = "Typed Client Factory is required";
+export declare const TYPED_CLIENT_REQUIRED = "Typed Client is required";
+export declare const TYPED_CLIENT_EXISTS = "Typed Client is already set";
+export declare const APPLICATION_NAME_REQUIRED = "Application name is required";

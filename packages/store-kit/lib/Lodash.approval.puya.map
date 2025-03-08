@@ -1,0 +1,1495 @@
+{
+  "version": 3,
+  "sources": [
+    "/home/zero/Projects/store-kit/contracts/lodash.py"
+  ],
+  "mappings": "AAMA;;AAAA;;;AAAA;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;;;AAAA;;;;;;;;;;;;AAAA;;AAkDK;;AAAA;AAAA;AAAA;;AAAA;AAlDL;;;AAAA;AAkDK;;;AAAA;;AARA;;AAAA;AAAA;AAAA;;AAAA;AA1CL;;;AAAA;;;AAAA;;;AAAA;;;AA0CK;;;AAAA;;AARA;;AAAA;AAAA;AAAA;;AAAA;AAlCL;;;AAAA;;;AAkCK;;;AAAA;;AAPA;;AAAA;AAAA;AAAA;;AAAA;AA3BL;;;AAAA;;;AA2BK;;;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;;;;;;AAAA;AAAA;AAAA;AAAA;;AANA;;AAAA;AAAA;AAAA;;AAAA;AArBL;;;AAAA;;;AAAA;;;AAAA;;;AAqBK;;;AAAA;;AArBL;;AAAA;;;;;;;;;;;;;;AAAA;;;AAgBK;;AAAA;AAAA;;;AAAA;;AALA;;AAAA;AAAA;;;AAAA;;;;;;;;AAEU;;AAAc;;AAAd;AAAP;AACO;AAAP;;AAIO;;AAAc;;AAAd;AAAP;AACO;AAAP;;AAER;;;AAEe;;AAAc;;AAAd;AAAP;AACI;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAJ;AACA;AAAA;;AAAA;AAAA;AAAA;;AAAA;;AAAA;;AAER;;;AAEe;;AAAc;;AAAd;AAAP;AACI;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAJ;AACe;AAAR;;AAAA;AAAA;AAAA;AAAA;;AAAP;AACO;AAAA;AAAP;AAER;;;AAEe;;AAAc;;AAAd;AAAP;AACI;;;;;;;;;;;;;;;;;AAAJ;AACe;AAAR;;AAAA;AAAA;AAAA;;AAAP;AAEO;;AAAA;AAAP;;AAER;;;AAGe;;AAAc;;AAAd;AAAP;AACI;;;;;;;;;;;;;;;;;;;;;;;;;;AAAJ;AACe;AAAR;;AAAA;AAAA;AAAA;AAAA;;AAAP;AACoB;AAAA;AAAA;AAAA;;AAAA;AAApB;;AAAA;;AAAA;;AAER;;;AAEe;;AAAc;;AAAd;AAAP;AACI;;;;;;;;;;;;;;;;AAAJ;AACA;AAAoB;;AAA6C;;;;;;;;;;AAAjE;;;AAA4G;;;AAA5G;",
+  "op_pc_offset": 2,
+  "pc_events": {
+    "0": {
+      "op": "txn NumAppArgs",
+      "defined_out": [
+        "tmp%0#2"
+      ],
+      "stack_out": [
+        "tmp%0#2"
+      ]
+    },
+    "2": {
+      "op": "bz main_bare_routing@10",
+      "stack_out": []
+    },
+    "5": {
+      "op": "pushbytess 0xa8617ccd 0xc0850aee 0x8e8900b9 0x53013bdb 0x4eff516d // method \"set(string,string)void\", method \"get(string)string\", method \"remove(string)void\", method \"concat(string,string)void\", method \"reclaim(uint64)void\""
+    },
+    "32": {
+      "op": "txna ApplicationArgs 0"
+    },
+    "35": {
+      "op": "match main_set_route@5 main_get_route@6 main_remove_route@7 main_concat_route@8 main_reclaim_route@9"
+    },
+    "47": {
+      "block": "main_after_if_else@14",
+      "stack_in": [],
+      "op": "intc_1 // 0",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "48": {
+      "op": "return"
+    },
+    "49": {
+      "block": "main_reclaim_route@9",
+      "stack_in": [],
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%32#0"
+      ],
+      "stack_out": [
+        "tmp%32#0"
+      ]
+    },
+    "51": {
+      "op": "!",
+      "defined_out": [
+        "tmp%33#0"
+      ],
+      "stack_out": [
+        "tmp%33#0"
+      ]
+    },
+    "52": {
+      "error": "OnCompletion is not NoOp",
+      "op": "assert // OnCompletion is not NoOp",
+      "stack_out": []
+    },
+    "53": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%34#0"
+      ],
+      "stack_out": [
+        "tmp%34#0"
+      ]
+    },
+    "55": {
+      "error": "can only call when not creating",
+      "op": "assert // can only call when not creating",
+      "stack_out": []
+    },
+    "56": {
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "reinterpret_bytes[8]%0#0"
+      ],
+      "stack_out": [
+        "reinterpret_bytes[8]%0#0"
+      ]
+    },
+    "59": {
+      "op": "btoi",
+      "defined_out": [
+        "tmp%36#0"
+      ],
+      "stack_out": [
+        "tmp%36#0"
+      ]
+    },
+    "60": {
+      "callsub": "contracts.lodash.Lodash.reclaim",
+      "op": "callsub reclaim",
+      "stack_out": []
+    },
+    "63": {
+      "op": "intc_0 // 1",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "64": {
+      "op": "return"
+    },
+    "65": {
+      "block": "main_concat_route@8",
+      "stack_in": [],
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%24#0"
+      ],
+      "stack_out": [
+        "tmp%24#0"
+      ]
+    },
+    "67": {
+      "op": "!",
+      "defined_out": [
+        "tmp%25#0"
+      ],
+      "stack_out": [
+        "tmp%25#0"
+      ]
+    },
+    "68": {
+      "error": "OnCompletion is not NoOp",
+      "op": "assert // OnCompletion is not NoOp",
+      "stack_out": []
+    },
+    "69": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%26#0"
+      ],
+      "stack_out": [
+        "tmp%26#0"
+      ]
+    },
+    "71": {
+      "error": "can only call when not creating",
+      "op": "assert // can only call when not creating",
+      "stack_out": []
+    },
+    "72": {
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "tmp%28#0"
+      ],
+      "stack_out": [
+        "tmp%28#0"
+      ]
+    },
+    "75": {
+      "op": "extract 2 0",
+      "defined_out": [
+        "tmp%29#0"
+      ],
+      "stack_out": [
+        "tmp%29#0"
+      ]
+    },
+    "78": {
+      "op": "txna ApplicationArgs 2",
+      "defined_out": [
+        "tmp%29#0",
+        "tmp%30#0"
+      ],
+      "stack_out": [
+        "tmp%29#0",
+        "tmp%30#0"
+      ]
+    },
+    "81": {
+      "op": "extract 2 0",
+      "defined_out": [
+        "tmp%29#0",
+        "tmp%31#0"
+      ],
+      "stack_out": [
+        "tmp%29#0",
+        "tmp%31#0"
+      ]
+    },
+    "84": {
+      "callsub": "contracts.lodash.Lodash.concat",
+      "op": "callsub concat",
+      "stack_out": []
+    },
+    "87": {
+      "op": "intc_0 // 1",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "88": {
+      "op": "return"
+    },
+    "89": {
+      "block": "main_remove_route@7",
+      "stack_in": [],
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%18#0"
+      ],
+      "stack_out": [
+        "tmp%18#0"
+      ]
+    },
+    "91": {
+      "op": "!",
+      "defined_out": [
+        "tmp%19#0"
+      ],
+      "stack_out": [
+        "tmp%19#0"
+      ]
+    },
+    "92": {
+      "error": "OnCompletion is not NoOp",
+      "op": "assert // OnCompletion is not NoOp",
+      "stack_out": []
+    },
+    "93": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%20#0"
+      ],
+      "stack_out": [
+        "tmp%20#0"
+      ]
+    },
+    "95": {
+      "error": "can only call when not creating",
+      "op": "assert // can only call when not creating",
+      "stack_out": []
+    },
+    "96": {
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "tmp%22#0"
+      ],
+      "stack_out": [
+        "tmp%22#0"
+      ]
+    },
+    "99": {
+      "op": "extract 2 0",
+      "defined_out": [
+        "tmp%23#0"
+      ],
+      "stack_out": [
+        "tmp%23#0"
+      ]
+    },
+    "102": {
+      "callsub": "contracts.lodash.Lodash.remove",
+      "op": "callsub remove",
+      "stack_out": []
+    },
+    "105": {
+      "op": "intc_0 // 1",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "106": {
+      "op": "return"
+    },
+    "107": {
+      "block": "main_get_route@6",
+      "stack_in": [],
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%11#0"
+      ],
+      "stack_out": [
+        "tmp%11#0"
+      ]
+    },
+    "109": {
+      "op": "!",
+      "defined_out": [
+        "tmp%12#0"
+      ],
+      "stack_out": [
+        "tmp%12#0"
+      ]
+    },
+    "110": {
+      "error": "OnCompletion is not NoOp",
+      "op": "assert // OnCompletion is not NoOp",
+      "stack_out": []
+    },
+    "111": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%13#0"
+      ],
+      "stack_out": [
+        "tmp%13#0"
+      ]
+    },
+    "113": {
+      "error": "can only call when not creating",
+      "op": "assert // can only call when not creating",
+      "stack_out": []
+    },
+    "114": {
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "tmp%15#0"
+      ],
+      "stack_out": [
+        "tmp%15#0"
+      ]
+    },
+    "117": {
+      "op": "extract 2 0",
+      "defined_out": [
+        "tmp%16#0"
+      ],
+      "stack_out": [
+        "tmp%16#0"
+      ]
+    },
+    "120": {
+      "callsub": "contracts.lodash.Lodash.get",
+      "op": "callsub get",
+      "defined_out": [
+        "to_encode%0#0"
+      ],
+      "stack_out": [
+        "to_encode%0#0"
+      ]
+    },
+    "123": {
+      "op": "dup",
+      "defined_out": [
+        "to_encode%0#0",
+        "to_encode%0#0 (copy)"
+      ],
+      "stack_out": [
+        "to_encode%0#0",
+        "to_encode%0#0 (copy)"
+      ]
+    },
+    "124": {
+      "op": "len",
+      "defined_out": [
+        "length%0#0",
+        "to_encode%0#0"
+      ],
+      "stack_out": [
+        "to_encode%0#0",
+        "length%0#0"
+      ]
+    },
+    "125": {
+      "op": "itob",
+      "defined_out": [
+        "as_bytes%0#0",
+        "to_encode%0#0"
+      ],
+      "stack_out": [
+        "to_encode%0#0",
+        "as_bytes%0#0"
+      ]
+    },
+    "126": {
+      "op": "extract 6 2",
+      "defined_out": [
+        "length_uint16%0#0",
+        "to_encode%0#0"
+      ],
+      "stack_out": [
+        "to_encode%0#0",
+        "length_uint16%0#0"
+      ]
+    },
+    "129": {
+      "op": "swap",
+      "stack_out": [
+        "length_uint16%0#0",
+        "to_encode%0#0"
+      ]
+    },
+    "130": {
+      "op": "concat",
+      "defined_out": [
+        "encoded_value%0#0"
+      ],
+      "stack_out": [
+        "encoded_value%0#0"
+      ]
+    },
+    "131": {
+      "op": "pushbytes 0x151f7c75",
+      "defined_out": [
+        "0x151f7c75",
+        "encoded_value%0#0"
+      ],
+      "stack_out": [
+        "encoded_value%0#0",
+        "0x151f7c75"
+      ]
+    },
+    "137": {
+      "op": "swap",
+      "stack_out": [
+        "0x151f7c75",
+        "encoded_value%0#0"
+      ]
+    },
+    "138": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%17#0"
+      ],
+      "stack_out": [
+        "tmp%17#0"
+      ]
+    },
+    "139": {
+      "op": "log",
+      "stack_out": []
+    },
+    "140": {
+      "op": "intc_0 // 1",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "141": {
+      "op": "return"
+    },
+    "142": {
+      "block": "main_set_route@5",
+      "stack_in": [],
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "144": {
+      "op": "!",
+      "defined_out": [
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "tmp%4#0"
+      ]
+    },
+    "145": {
+      "error": "OnCompletion is not NoOp",
+      "op": "assert // OnCompletion is not NoOp",
+      "stack_out": []
+    },
+    "146": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%5#0"
+      ],
+      "stack_out": [
+        "tmp%5#0"
+      ]
+    },
+    "148": {
+      "error": "can only call when not creating",
+      "op": "assert // can only call when not creating",
+      "stack_out": []
+    },
+    "149": {
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "tmp%7#0"
+      ]
+    },
+    "152": {
+      "op": "extract 2 0",
+      "defined_out": [
+        "tmp%8#0"
+      ],
+      "stack_out": [
+        "tmp%8#0"
+      ]
+    },
+    "155": {
+      "op": "txna ApplicationArgs 2",
+      "defined_out": [
+        "tmp%8#0",
+        "tmp%9#0"
+      ],
+      "stack_out": [
+        "tmp%8#0",
+        "tmp%9#0"
+      ]
+    },
+    "158": {
+      "op": "extract 2 0",
+      "defined_out": [
+        "tmp%10#0",
+        "tmp%8#0"
+      ],
+      "stack_out": [
+        "tmp%8#0",
+        "tmp%10#0"
+      ]
+    },
+    "161": {
+      "callsub": "contracts.lodash.Lodash.set",
+      "op": "callsub set",
+      "stack_out": []
+    },
+    "164": {
+      "op": "intc_0 // 1",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "165": {
+      "op": "return"
+    },
+    "166": {
+      "block": "main_bare_routing@10",
+      "stack_in": [],
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%37#0"
+      ],
+      "stack_out": [
+        "tmp%37#0"
+      ]
+    },
+    "168": {
+      "op": "switch main___algopy_default_create@13 main_after_if_else@14 main_after_if_else@14 main_after_if_else@14 main_on_update@11 main_on_delete@12",
+      "stack_out": []
+    },
+    "182": {
+      "op": "b main_after_if_else@14"
+    },
+    "185": {
+      "block": "main_on_delete@12",
+      "stack_in": [],
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%40#0"
+      ],
+      "stack_out": [
+        "tmp%40#0"
+      ]
+    },
+    "187": {
+      "error": "can only call when not creating",
+      "op": "assert // can only call when not creating",
+      "stack_out": []
+    },
+    "188": {
+      "callsub": "contracts.lodash.Lodash.on_delete",
+      "op": "callsub on_delete"
+    },
+    "191": {
+      "op": "intc_0 // 1",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "192": {
+      "op": "return"
+    },
+    "193": {
+      "block": "main_on_update@11",
+      "stack_in": [],
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%38#0"
+      ],
+      "stack_out": [
+        "tmp%38#0"
+      ]
+    },
+    "195": {
+      "error": "can only call when not creating",
+      "op": "assert // can only call when not creating",
+      "stack_out": []
+    },
+    "196": {
+      "callsub": "contracts.lodash.Lodash.on_update",
+      "op": "callsub on_update"
+    },
+    "199": {
+      "op": "intc_0 // 1",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "200": {
+      "op": "return"
+    },
+    "201": {
+      "block": "main___algopy_default_create@13",
+      "stack_in": [],
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%42#0"
+      ],
+      "stack_out": [
+        "tmp%42#0"
+      ]
+    },
+    "203": {
+      "op": "!",
+      "defined_out": [
+        "tmp%43#0"
+      ],
+      "stack_out": [
+        "tmp%43#0"
+      ]
+    },
+    "204": {
+      "error": "can only call when creating",
+      "op": "assert // can only call when creating",
+      "stack_out": []
+    },
+    "205": {
+      "op": "intc_0 // 1",
+      "defined_out": [
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "tmp%0#1"
+      ]
+    },
+    "206": {
+      "op": "return"
+    },
+    "207": {
+      "subroutine": "contracts.lodash.Lodash.on_update",
+      "params": {},
+      "block": "on_update",
+      "stack_in": [],
+      "op": "txn Sender"
+    },
+    "209": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "211": {
+      "op": "==",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "212": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "213": {
+      "op": "intc_2 // TMPL_UPDATABLE",
+      "defined_out": [
+        "TMPL_UPDATABLE"
+      ],
+      "stack_out": [
+        "TMPL_UPDATABLE"
+      ]
+    },
+    "214": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "215": {
+      "retsub": true,
+      "op": "retsub"
+    },
+    "216": {
+      "subroutine": "contracts.lodash.Lodash.on_delete",
+      "params": {},
+      "block": "on_delete",
+      "stack_in": [],
+      "op": "txn Sender"
+    },
+    "218": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "220": {
+      "op": "==",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "221": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "222": {
+      "op": "intc_3 // TMPL_DELETABLE",
+      "defined_out": [
+        "TMPL_DELETABLE"
+      ],
+      "stack_out": [
+        "TMPL_DELETABLE"
+      ]
+    },
+    "223": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "224": {
+      "retsub": true,
+      "op": "retsub"
+    },
+    "225": {
+      "subroutine": "contracts.lodash.Lodash.set",
+      "params": {
+        "path#0": "bytes",
+        "value#0": "bytes"
+      },
+      "block": "set",
+      "stack_in": [],
+      "op": "proto 2 0"
+    },
+    "228": {
+      "op": "txn Sender"
+    },
+    "230": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "232": {
+      "op": "==",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "233": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "234": {
+      "op": "pushbytes 0x53657474696e67207b706174687d20746f207b76616c75657d",
+      "defined_out": [
+        "0x53657474696e67207b706174687d20746f207b76616c75657d"
+      ],
+      "stack_out": [
+        "0x53657474696e67207b706174687d20746f207b76616c75657d"
+      ]
+    },
+    "261": {
+      "op": "log",
+      "stack_out": []
+    },
+    "262": {
+      "op": "bytec_0 // 0x6f726d5f",
+      "defined_out": [
+        "0x6f726d5f"
+      ],
+      "stack_out": [
+        "0x6f726d5f"
+      ]
+    },
+    "263": {
+      "op": "frame_dig -2",
+      "defined_out": [
+        "0x6f726d5f",
+        "path#0 (copy)"
+      ],
+      "stack_out": [
+        "0x6f726d5f",
+        "path#0 (copy)"
+      ]
+    },
+    "265": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "266": {
+      "op": "dup",
+      "defined_out": [
+        "tmp%3#0",
+        "tmp%3#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "tmp%3#0 (copy)"
+      ]
+    },
+    "267": {
+      "op": "box_del",
+      "defined_out": [
+        "tmp%3#0",
+        "{box_del}"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "{box_del}"
+      ]
+    },
+    "268": {
+      "op": "pop",
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "269": {
+      "op": "frame_dig -1",
+      "defined_out": [
+        "tmp%3#0",
+        "value#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "value#0 (copy)"
+      ]
+    },
+    "271": {
+      "op": "box_put",
+      "stack_out": []
+    },
+    "272": {
+      "retsub": true,
+      "op": "retsub"
+    },
+    "273": {
+      "subroutine": "contracts.lodash.Lodash.get",
+      "params": {
+        "path#0": "bytes"
+      },
+      "block": "get",
+      "stack_in": [],
+      "op": "proto 1 1"
+    },
+    "276": {
+      "op": "txn Sender"
+    },
+    "278": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "280": {
+      "op": "==",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "281": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "282": {
+      "op": "pushbytes 0x47657474696e67207b706174687d20746f207b76616c75657d",
+      "defined_out": [
+        "0x47657474696e67207b706174687d20746f207b76616c75657d"
+      ],
+      "stack_out": [
+        "0x47657474696e67207b706174687d20746f207b76616c75657d"
+      ]
+    },
+    "309": {
+      "op": "log",
+      "stack_out": []
+    },
+    "310": {
+      "op": "bytec_0 // 0x6f726d5f",
+      "defined_out": [
+        "0x6f726d5f"
+      ],
+      "stack_out": [
+        "0x6f726d5f"
+      ]
+    },
+    "311": {
+      "op": "frame_dig -1",
+      "defined_out": [
+        "0x6f726d5f",
+        "path#0 (copy)"
+      ],
+      "stack_out": [
+        "0x6f726d5f",
+        "path#0 (copy)"
+      ]
+    },
+    "313": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "314": {
+      "op": "dup",
+      "defined_out": [
+        "tmp%3#0",
+        "tmp%3#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "tmp%3#0 (copy)"
+      ]
+    },
+    "315": {
+      "op": "box_len",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0",
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "316": {
+      "op": "bury 1",
+      "stack_out": [
+        "tmp%3#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "318": {
+      "op": "assert",
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "319": {
+      "op": "box_get",
+      "defined_out": [
+        "maybe_exists%1#0",
+        "maybe_value%1#0"
+      ],
+      "stack_out": [
+        "maybe_value%1#0",
+        "maybe_exists%1#0"
+      ]
+    },
+    "320": {
+      "error": "check self.public entry exists",
+      "op": "assert // check self.public entry exists",
+      "stack_out": [
+        "maybe_value%1#0"
+      ]
+    },
+    "321": {
+      "retsub": true,
+      "op": "retsub"
+    },
+    "322": {
+      "subroutine": "contracts.lodash.Lodash.remove",
+      "params": {
+        "path#0": "bytes"
+      },
+      "block": "remove",
+      "stack_in": [],
+      "op": "proto 1 0"
+    },
+    "325": {
+      "op": "txn Sender"
+    },
+    "327": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "329": {
+      "op": "==",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "330": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "331": {
+      "op": "pushbytes 0x52656d6f76696e67207b706174687d",
+      "defined_out": [
+        "0x52656d6f76696e67207b706174687d"
+      ],
+      "stack_out": [
+        "0x52656d6f76696e67207b706174687d"
+      ]
+    },
+    "348": {
+      "op": "log",
+      "stack_out": []
+    },
+    "349": {
+      "op": "bytec_0 // 0x6f726d5f",
+      "defined_out": [
+        "0x6f726d5f"
+      ],
+      "stack_out": [
+        "0x6f726d5f"
+      ]
+    },
+    "350": {
+      "op": "frame_dig -1",
+      "defined_out": [
+        "0x6f726d5f",
+        "path#0 (copy)"
+      ],
+      "stack_out": [
+        "0x6f726d5f",
+        "path#0 (copy)"
+      ]
+    },
+    "352": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "353": {
+      "op": "box_len",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0"
+      ],
+      "stack_out": [
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "354": {
+      "op": "bury 1",
+      "stack_out": [
+        "maybe_exists%0#0"
+      ]
+    },
+    "356": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "357": {
+      "op": "frame_dig -1",
+      "stack_out": [
+        "path#0 (copy)"
+      ]
+    },
+    "359": {
+      "op": "box_del",
+      "defined_out": [
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "tmp%4#0"
+      ]
+    },
+    "360": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "361": {
+      "retsub": true,
+      "op": "retsub"
+    },
+    "362": {
+      "subroutine": "contracts.lodash.Lodash.concat",
+      "params": {
+        "path#0": "bytes",
+        "value#0": "bytes"
+      },
+      "block": "concat",
+      "stack_in": [],
+      "op": "proto 2 0"
+    },
+    "365": {
+      "op": "txn Sender"
+    },
+    "367": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "369": {
+      "op": "==",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "370": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "371": {
+      "op": "pushbytes 0x416464696e67207b76616c75657d20746f207b706174687d",
+      "defined_out": [
+        "0x416464696e67207b76616c75657d20746f207b706174687d"
+      ],
+      "stack_out": [
+        "0x416464696e67207b76616c75657d20746f207b706174687d"
+      ]
+    },
+    "397": {
+      "op": "log",
+      "stack_out": []
+    },
+    "398": {
+      "op": "bytec_0 // 0x6f726d5f",
+      "defined_out": [
+        "0x6f726d5f"
+      ],
+      "stack_out": [
+        "0x6f726d5f"
+      ]
+    },
+    "399": {
+      "op": "frame_dig -2",
+      "defined_out": [
+        "0x6f726d5f",
+        "path#0 (copy)"
+      ],
+      "stack_out": [
+        "0x6f726d5f",
+        "path#0 (copy)"
+      ]
+    },
+    "401": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "402": {
+      "op": "dup",
+      "defined_out": [
+        "tmp%3#0",
+        "tmp%3#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "tmp%3#0 (copy)"
+      ]
+    },
+    "403": {
+      "op": "box_len",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0",
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "404": {
+      "op": "bury 1",
+      "stack_out": [
+        "tmp%3#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "406": {
+      "op": "assert",
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "407": {
+      "op": "dup",
+      "stack_out": [
+        "tmp%3#0",
+        "tmp%3#0 (copy)"
+      ]
+    },
+    "408": {
+      "op": "box_get",
+      "defined_out": [
+        "maybe_exists%1#0",
+        "maybe_value%1#0",
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "maybe_value%1#0",
+        "maybe_exists%1#0"
+      ]
+    },
+    "409": {
+      "error": "check self.public entry exists",
+      "op": "assert // check self.public entry exists",
+      "stack_out": [
+        "tmp%3#0",
+        "maybe_value%1#0"
+      ]
+    },
+    "410": {
+      "op": "frame_dig -1",
+      "defined_out": [
+        "maybe_value%1#0",
+        "tmp%3#0",
+        "value#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "maybe_value%1#0",
+        "value#0 (copy)"
+      ]
+    },
+    "412": {
+      "op": "concat",
+      "defined_out": [
+        "new_box_value%0#0",
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "new_box_value%0#0"
+      ]
+    },
+    "413": {
+      "op": "dig 1",
+      "stack_out": [
+        "tmp%3#0",
+        "new_box_value%0#0",
+        "tmp%3#0 (copy)"
+      ]
+    },
+    "415": {
+      "op": "box_del",
+      "defined_out": [
+        "new_box_value%0#0",
+        "tmp%3#0",
+        "{box_del}"
+      ],
+      "stack_out": [
+        "tmp%3#0",
+        "new_box_value%0#0",
+        "{box_del}"
+      ]
+    },
+    "416": {
+      "op": "pop",
+      "stack_out": [
+        "tmp%3#0",
+        "new_box_value%0#0"
+      ]
+    },
+    "417": {
+      "op": "box_put",
+      "stack_out": []
+    },
+    "418": {
+      "retsub": true,
+      "op": "retsub"
+    },
+    "419": {
+      "subroutine": "contracts.lodash.Lodash.reclaim",
+      "params": {
+        "amount#0": "uint64"
+      },
+      "block": "reclaim",
+      "stack_in": [],
+      "op": "proto 1 0"
+    },
+    "422": {
+      "op": "txn Sender"
+    },
+    "424": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "426": {
+      "op": "==",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "427": {
+      "op": "assert",
+      "stack_out": []
+    },
+    "428": {
+      "op": "pushbytes 0x5265636c61696d696e67204d4252",
+      "defined_out": [
+        "0x5265636c61696d696e67204d4252"
+      ],
+      "stack_out": [
+        "0x5265636c61696d696e67204d4252"
+      ]
+    },
+    "444": {
+      "op": "log",
+      "stack_out": []
+    },
+    "445": {
+      "op": "itxn_begin"
+    },
+    "446": {
+      "op": "global CurrentApplicationAddress",
+      "defined_out": [
+        "inner_txn_params%0%%param_Sender_idx_0#0"
+      ],
+      "stack_out": [
+        "inner_txn_params%0%%param_Sender_idx_0#0"
+      ]
+    },
+    "448": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "inner_txn_params%0%%param_Receiver_idx_0#0",
+        "inner_txn_params%0%%param_Sender_idx_0#0"
+      ],
+      "stack_out": [
+        "inner_txn_params%0%%param_Sender_idx_0#0",
+        "inner_txn_params%0%%param_Receiver_idx_0#0"
+      ]
+    },
+    "450": {
+      "op": "frame_dig -1",
+      "defined_out": [
+        "amount#0 (copy)",
+        "inner_txn_params%0%%param_Receiver_idx_0#0",
+        "inner_txn_params%0%%param_Sender_idx_0#0"
+      ],
+      "stack_out": [
+        "inner_txn_params%0%%param_Sender_idx_0#0",
+        "inner_txn_params%0%%param_Receiver_idx_0#0",
+        "amount#0 (copy)"
+      ]
+    },
+    "452": {
+      "op": "itxn_field Amount",
+      "stack_out": [
+        "inner_txn_params%0%%param_Sender_idx_0#0",
+        "inner_txn_params%0%%param_Receiver_idx_0#0"
+      ]
+    },
+    "454": {
+      "op": "itxn_field Receiver",
+      "stack_out": [
+        "inner_txn_params%0%%param_Sender_idx_0#0"
+      ]
+    },
+    "456": {
+      "op": "itxn_field Sender",
+      "stack_out": []
+    },
+    "458": {
+      "op": "intc_0 // pay",
+      "defined_out": [
+        "pay"
+      ],
+      "stack_out": [
+        "pay"
+      ]
+    },
+    "459": {
+      "op": "itxn_field TypeEnum",
+      "stack_out": []
+    },
+    "461": {
+      "op": "intc_1 // 0",
+      "defined_out": [
+        "0"
+      ],
+      "stack_out": [
+        "0"
+      ]
+    },
+    "462": {
+      "op": "itxn_field Fee",
+      "stack_out": []
+    },
+    "464": {
+      "op": "itxn_submit"
+    },
+    "465": {
+      "retsub": true,
+      "op": "retsub"
+    }
+  }
+}

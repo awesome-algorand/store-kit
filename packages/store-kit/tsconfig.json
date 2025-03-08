@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": true,
+    "declaration": true,
+    "outDir": "./lib"
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "lib",
+    "test/**/*.ts",
+    "**/*.test.ts",
+    "**/*.bench.ts"
+  ],
+  "typedocOptions": {
+    "projectDocuments": ["src/*.md"],
+    "entryPoints": [
+      "src/index.ts",
+      "src/objects/index.ts",
+      "src/lodash/index.ts"
+    ]
+  }
+}
