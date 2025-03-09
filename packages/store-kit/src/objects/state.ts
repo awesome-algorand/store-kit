@@ -9,11 +9,18 @@ import {APPLICATION_ID_REQUIRED} from "./errors.js";
 
 
 export function assemble<T>(kvs: [string, string][]): T {
-  const data = {}
+  const data: {[k: string]: any} = {}
   for (const [key, value] of kvs) {
     set(data, key.replace(PREFIX, ''), parseBigInt(value))
   }
-  return data as T;
+
+  return Object.keys(data).sort().reduce(
+    (obj: {[k: string]: any}, key) => {
+      obj[key] = data[key];
+      return obj;
+    },
+    {}
+  ) as T;
 }
 
 export function parseBigInt(valueString: string){
@@ -44,7 +51,7 @@ export async function fromBoxes<T>(algorand: AlgorandClient, appId: bigint){
 
   const names = await algorand.app.getBoxNames(appId)
   const values = await algorand.app.getBoxValues(appId, names)
-  let data = {}
+  let data: {[k: string]: any} = {}
   const decoder = new TextDecoder()
 
   for (let idx = 0; idx < names.length; idx++) {
@@ -52,7 +59,14 @@ export async function fromBoxes<T>(algorand: AlgorandClient, appId: bigint){
     const valueString = decoder.decode(values[idx]);
     set(data, bName.name.replace(PREFIX, ''), parseBigInt(valueString));
   }
-  return data as T
+
+  return Object.keys(data).sort().reduce(
+    (obj: {[k: string]: any}, key) => {
+      obj[key] = data[key];
+      return obj;
+    },
+    {}
+  ) as T;
 }
 
 

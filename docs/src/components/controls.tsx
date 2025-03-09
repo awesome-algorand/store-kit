@@ -1,7 +1,7 @@
 // Import CSS in Provider for Client Hydration
 import '@/tailwind.css'
 import {Button} from "@/components/ui/button.tsx";
-import {demoStore} from "@/store.ts";
+import {bearStore} from "@/store.ts";
 import {UseWallet} from "@/components/wallet/provider.tsx";
 import {ModalToggle} from "@/components/wallet/modal-toggle.tsx";
 import {createContext, useContext, useEffect, useMemo, useState, type ReactNode} from "react";
@@ -17,6 +17,7 @@ import {ControlsContext} from "@/components/controls.hooks.ts";
 import {cn} from "@/lib/utils.ts";
 import {deepMerge, toMBR} from "@awesome-algorand/store-kit/objects";
 import type {AlgoAmount} from "@algorandfoundation/algokit-utils/types/amount";
+import type { StoreStatus } from '@awesome-algorand/store-kit';
 
 export function CheckboxWithLabel({id, label, checked, onCheckedChange }:  {
   id: string;
@@ -44,7 +45,7 @@ export function CheckboxWithLabel({id, label, checked, onCheckedChange }:  {
 export function ControlsProvider({children}: { children: ReactNode}){
   const isLoading = useLoading()
   const [error, setError] = useState<Error|null>(null)
-  const [state, setState] = useState(demoStore.state)
+  const [state, setState] = useState(bearStore.state)
   return (
     <ControlsContext.Provider value={{isLoading, isError: error, setError, state, setState}}>
       {children}
@@ -53,32 +54,54 @@ export function ControlsProvider({children}: { children: ReactNode}){
 
 }
 
+export function StateButton(){
+  useStore(bearStore)
+  const isLoading = useLoading()
+  const manager = useWallet()
+
+  const ACTIONS: {[k: string]: ()=>any} = {
+    "unknown": ()=>bearStore.init(),
+    "ready": ()=>bearStore.save(),
+  }
+  const LABELS: {[k: string]: any} ={
+    "unknown":"Deploy",
+    "loading": <Spinner/>,
+    "ready":"Save"
+  }
+  const VARIANTS:{[k: string]: "secondary" | "destructive" | "ghost" | "outline" | "default" | "link" | null | undefined} ={
+    "unknown": manager.activeWallet ? "secondary" : "destructive",
+    "loading": "ghost",
+    "ready": "outline"
+  }
+  return (
+    <Button variant={VARIANTS[bearStore.status]} onClick={ACTIONS[bearStore.status]}>
+      {isLoading ? "Loading..." : LABELS[bearStore.status]}
+    </Button>
+  )
+}
+
 export function ReactControls({}){
 
   const isLoading = useLoading()
   const [mbr, setMBR] = useState<AlgoAmount>(0n as unknown as AlgoAmount)
   const [appId, setAppId] = useState<bigint|null>(null)
-  const demo = useStore(demoStore)
+  const demo = useStore(bearStore)
   const [walletBalance, setWalletBalance] = useState(0n)
   const [appBalance, setAppBalance] = useState(0n)
   const manager = useWallet()
   const {activeNetwork, activeNetworkConfig} = useNetwork()
 
   useEffect(()=>{
-    if(!manager.isReady || !demoStore.appId) return
-    if(demoStore.appId !== appId) {
-      setAppId(demoStore.appId)
+    if(!manager.isReady || !bearStore.appId) return
+    if(bearStore.appId !== appId) {
+      setAppId(bearStore.appId)
     }
-    demoStore.assemble().then((boxData)=>{
-      const result = toMBR(deepMerge(boxData, demo)).microAlgo()
-      console.log('[Starlight Docs] Assembling MBR', result)
-      setMBR(result)
-    })
 
-    demoStore.balance().then((b)=>{
+
+    bearStore.balance().then((b)=>{
       setAppBalance(b)
     })
-  }, [manager.isReady, demoStore.appId, demo])
+  }, [manager.isReady, bearStore.appId, demo])
 
   useEffect(() => {
     if(!manager.isReady) return
@@ -89,6 +112,15 @@ export function ReactControls({}){
       port: activeNetworkConfig.algod.port,
     }))
   }, [activeNetwork]);
+
+  useEffect(() => {
+    if(!manager.activeAddress || !manager.isReady || !bearStore.client) return
+    bearStore.assemble().then((boxData)=>{
+      const result = toMBR(deepMerge(demo, boxData)).microAlgo()
+      console.log('[Starlight Docs] Assembling MBR', result)
+      setMBR(result)
+    })
+  }, [demo]);
 
   useEffect(() => {
     if(!manager.activeAddress || !manager.isReady) return
@@ -113,14 +145,15 @@ export function ReactControls({}){
         <p>Wallet Address: {manager.activeAddress}</p>
         <p>App Balance: {appBalance.microAlgo().algos} <strong>ALGO</strong></p>
         <p>MBR: {mbr.algos} <strong>ALGO</strong></p>
-        <p>Transactions: {demoStore.toChunks().flatMap(v=>v).length}</p>
-        <p>Cost: {demoStore.toChunks().flatMap(v=>v).length}</p>
+        <p>Transactions: {bearStore.toChunks().flatMap(v=>v).length}</p>
+        <p>Cost: {bearStore.toChunks().flatMap(v=>v).length}</p>
       </CardContent>
       <CardFooter>
-        {manager.activeWallet && <Button variant="secondary" disabled={!demoStore.dirty} onClick={()=>{demoStore.client ? demoStore.save() : demoStore.init()}}>{demoStore.client ? "Save" : "Deploy"}</Button>}
+        <StateButton/>
+        {manager.activeWallet && <Button variant="secondary" disabled={!bearStore.dirty} onClick={()=>{bearStore.client ? bearStore.save() : bearStore.init()}}>{bearStore.client ? "Save" : "Deploy"}</Button>}
         <ModalToggle/>
         <CheckboxWithLabel label={"Enable Autosave"} checked={false} onCheckedChange={()=>{}} id="autosave"/>
-        {appId && <Button variant="destructive" disabled={!demoStore.appId} onClick={()=>{demoStore.destroy()}}>{"Destroy"}</Button>}
+        {appId && <Button variant="destructive" disabled={!bearStore.appId} onClick={()=>{bearStore.destroy()}}>{"Destroy"}</Button>}
         {appId && <a target="_blank" href={`https://lora.algokit.io/${activeNetwork}/application/${appId}`}>Open in Lora</a>}
       </CardFooter>
 

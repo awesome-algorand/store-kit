@@ -9,7 +9,7 @@ import Handlebars from "handlebars";
 // Project Files
 import templateSource from '@/templates/store.ts.hbs?raw'
 import {Spinner} from "@/components/ui/spinner.tsx";
-import {demoStore} from "@/store.ts";
+import {bearStore} from "@/store.ts";
 import renderOptions from '../../ec.config.mjs'
 import {useWallet} from "@txnlab/use-wallet-react";
 import { UseWallet } from "./wallet/provider";
@@ -36,7 +36,7 @@ export const manager = new WalletManager({
 export function ReactStoreCode({type}: {type: 'txnlab' | 'algokit'}) {
   const manager =useWallet()
   const [hype, setHype] = useState<RehypeExpressiveCodeRenderer | null>(null)
-  const demo = useStore(demoStore)
+  const demo = useStore(bearStore)
   const [html, setHtml] = useState('')
 
   useEffect(() => {

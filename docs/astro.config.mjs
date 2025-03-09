@@ -129,5 +129,5 @@ export default defineConfig({
             typeDocSidebarGroup,
         ],
         customCss: ['./src/tailwind.css'],
-		}), tailwind(), react()],
+		}), tailwind({applyBaseStyles: false}), react()],
 });

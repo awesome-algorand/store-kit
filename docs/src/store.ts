@@ -71,9 +71,14 @@ export const isModalOpen = new Store(false)
 
 
 export const queryClient = new QueryClient()
-export const demoStore = new StoreKit({
+export const bearStore = new StoreKit({
   count: 5,
   type: "Grizzly"
   // @ts-ignore
 }).setAlgorand(algorand)
   .setManager(walletManager)
+
+if(walletManager.activeAddress){
+  bearStore.init()
+}
+

@@ -1,5 +1,5 @@
 import {createContext, useContext} from "react";
-import {demoStore} from "@/store.ts";
+import {bearStore} from "@/store.ts";
 
 export type ControlsContextState = {
   isLoading: boolean | null,
@@ -8,7 +8,7 @@ export type ControlsContextState = {
   state: any,
   setState: (state: any) => void,
 }
-export const ControlsContext = createContext<ControlsContextState>({isLoading: null, isError: null, setError: console.log, state: {...demoStore.state}, setState: console.log});
+export const ControlsContext = createContext<ControlsContextState>({isLoading: null, isError: null, setError: console.log, state: {...bearStore.state}, setState: console.log});
 
 export function useControls(){
   const context = useContext(ControlsContext)

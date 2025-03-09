@@ -7,6 +7,7 @@ import { deepMerge, diff, fromBoxes, toChunks, toMBR } from "./objects/index.js"
 import { ACTIVE_ADDRESS_REQUIRED, ALGORAND_CLIENT_REQUIRED, TYPED_CLIENT_EXISTS, TYPED_CLIENT_REQUIRED, WALLET_MANAGER_EXISTS, WALLET_MANAGER_REQUIRED } from "./errors";
 import { getClient, NotFoundError } from "./clients.js";
 import { PREFIX } from "./objects/constants.js";
+import set from "lodash.set";
 const TAG = supportsColor ? '[' + chalk.bold('Store') + chalk.cyan('Kit') + ']' : '[StoreKit]';
 const ALGOKIT = supportsColor ? chalk.bold("@algokit") + "/" + chalk.cyanBright('clients') : '@algokit/clients';
 const TXNLAB = supportsColor ? chalk.bold("@txnlab") + "/" + chalk.green('use-wallet') : '@txnlab/use-wallet';
@@ -36,9 +37,11 @@ const TXNLAB = supportsColor ? chalk.bold("@txnlab") + "/" + chalk.green('use-wa
  */
 export class Store extends BaseStore {
     status = 'unknown';
-    dirty = true;
     deltas = new Map();
     network = NetworkId.LOCALNET;
+    get dirty() {
+        return this.deltas.size > 0;
+    }
     /**
      * Represents an instance of AlgorandClient, which provides mechanisms to interact
      * with the Algorand blockchain network.
@@ -129,24 +132,30 @@ export class Store extends BaseStore {
     constructor(initialState) {
         super(initialState, {
             onUpdate: async () => {
-                console.log(`${TAG} 🔀 Updated State`, this.state);
-                // Handle dirty state saves
-                if (this.client && this.dirty && this.deltas.size > 0) {
-                    await this.save();
-                    this.dirty = false;
+                console.log(`${TAG} 🔀 Updated State ${this.status}`, this.state);
+                // Handle dirty state saves, skip the initial loading event
+                if (this.client && this.deltas.size > 0) {
+                    if (this.status !== "loading") {
+                        this.deltas.forEach((value, key) => {
+                            console.log(`settomg datastore ${key} to ${value}`);
+                            set(this.state, key.replace(PREFIX, ""), value);
+                            console.log(get(this.state, key.replace(PREFIX, "")));
+                        });
+                        this.setState(() => this.state);
+                    }
+                    if (this.status !== "loading")
+                        await this.save();
                     this.deltas.clear();
-                }
-                if (this.dirty && this.deltas.size === 0) {
-                    this.dirty = false;
+                    this.status = 'ready';
                 }
             },
             updateFn: (previous) => {
-                this.dirty = true;
                 return (updater) => {
-                    console.log(`${TAG} ⚡️ Emit state change`, previous);
                     const nextState = updater(previous);
+                    console.log(`${TAG} ⚡️ Emit state change (${this.status})`, diff(previous, nextState));
                     if (this.client) {
-                        diff(previous, nextState).forEach((diff) => this.deltas.set(...diff));
+                        diff(previous, nextState)
+                            .forEach((kv) => this.deltas.set(...kv));
                     }
                     return nextState;
                 };
@@ -287,14 +296,15 @@ export class Store extends BaseStore {
         if (!this.algorand) {
             throw new Error(ALGORAND_CLIENT_REQUIRED);
         }
-        let type = 'unknown';
         // TODO: Think about this problem a bit more, possibly at the ORM/Registry level
         try {
             // Try to find an existing client
             this.client = await getClient(this.algorand, this.appId ? this.appId : this.deployer ? this.deployer.addr.toString() : null, name);
             console.log(`${TAG} 🍻 Welcome back! Loading existing store: ${name}`);
             this.appId = this.client.appId;
-            type = 'existing';
+            this.status = 'loading';
+            const boxData = await this.assemble();
+            this.setState(() => boxData);
         }
         catch (e) {
             if (e instanceof NotFoundError) {
@@ -317,7 +327,8 @@ export class Store extends BaseStore {
                     });
                     this.client = appClient;
                     this.appId = appClient.appId;
-                    type = 'new';
+                    await this.save();
+                    this.status = 'ready';
                 }
                 else {
                     throw e;
@@ -325,16 +336,6 @@ export class Store extends BaseStore {
             }
             else {
                 throw e;
-            }
-        }
-        if (sync) {
-            if (type === 'new') {
-                await this.save();
-            }
-            else if (type === 'existing') {
-                console.log('Assmble the existing object');
-                const boxState = await this.assemble();
-                this.setState(() => boxState);
             }
         }
         return this;
@@ -376,7 +377,7 @@ export class Store extends BaseStore {
      * ```
      */
     async save() {
-        console.log(`${TAG} 💾 Saving State`);
+        console.log(`${TAG} 💾 Saving State`, this);
         if (!this.algorand) {
             throw new TypeError("AlgorandClient is required");
         }
@@ -392,9 +393,9 @@ export class Store extends BaseStore {
         const boxData = await this.assemble();
         const requiredMbr = toMBR(deepMerge(boxData, this.state)).microAlgo().microAlgos;
         const needsFunding = balance < requiredMbr;
-        console.log({ balance, requiredMbr, needsFunding });
+        console.log({ balance, count: this.state['count'], requiredMbr, needsFunding });
         // Save State On-Chain
-        await Promise.all(toChunks(this.state).map(async (paths, idx) => {
+        await Promise.all(this.toChunks().map(async (paths, idx) => {
             // TODO: Logical Grouping around Objects (aka Atomic Composed Objects)
             // TODO: Bulk Set/GET
             const atc = this.client.newGroup();
@@ -407,7 +408,7 @@ export class Store extends BaseStore {
                 }), this.deployer.signer);
             }
             for (const path of paths) {
-                console.debug(`%cGrouping ${path} with value: ${get(this.state, path)}`, 'color: green;');
+                console.log(`%cGrouping ${path} with value: ${get(this.state, path)}`, 'color: green;');
                 atc.set({
                     args: { path: path, value: get(this.state, path).toString() },
                     boxReferences: [`${PREFIX}${path}`],

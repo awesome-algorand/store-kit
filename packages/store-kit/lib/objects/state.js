@@ -10,7 +10,10 @@ export function assemble(kvs) {
     for (const [key, value] of kvs) {
         set(data, key.replace(PREFIX, ''), parseBigInt(value));
     }
-    return data;
+    return Object.keys(data).sort().reduce((obj, key) => {
+        obj[key] = data[key];
+        return obj;
+    }, {});
 }
 export function parseBigInt(valueString) {
     let value;
@@ -45,7 +48,10 @@ export async function fromBoxes(algorand, appId) {
         const valueString = decoder.decode(values[idx]);
         set(data, bName.name.replace(PREFIX, ''), parseBigInt(valueString));
     }
-    return data;
+    return Object.keys(data).sort().reduce((obj, key) => {
+        obj[key] = data[key];
+        return obj;
+    }, {});
 }
 /**
  * Compares two objects and returns an array of paths that have different values.

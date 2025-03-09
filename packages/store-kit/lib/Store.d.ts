@@ -3,7 +3,7 @@ import { Store as BaseStore } from '@tanstack/store';
 import { NetworkId, WalletManager } from "@txnlab/use-wallet";
 import { LodashClient } from "./lodash/index.js";
 import type { Deployer, StoreInterface } from "./types.js";
-type StoreStatus = 'unknown' | 'existing' | 'new';
+export type StoreStatus = 'unknown' | 'loading' | 'ready';
 /**
  * A specialized `Store` class extending from [@tanstack/store](https://tanstack.com/store),
  * designed for managing and interacting with application-level state on the Algorand blockchain.
@@ -30,9 +30,9 @@ type StoreStatus = 'unknown' | 'existing' | 'new';
  */
 export declare class Store<TState> extends BaseStore<TState> implements StoreInterface<TState> {
     status: StoreStatus;
-    dirty: boolean;
     deltas: Map<string, string>;
     network: NetworkId;
+    get dirty(): boolean;
     /**
      * Represents an instance of AlgorandClient, which provides mechanisms to interact
      * with the Algorand blockchain network.
@@ -196,4 +196,3 @@ export declare class Store<TState> extends BaseStore<TState> implements StoreInt
     assemble(): Promise<TState>;
     destroy(): Promise<void>;
 }
-export {};

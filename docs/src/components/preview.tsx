@@ -1,7 +1,7 @@
 import {JsonForms} from "@jsonforms/react";
 import {vanillaCells, vanillaRenderers, JsonFormsStyleContext} from "@jsonforms/vanilla-renderers";
 import {useStore} from "@tanstack/react-store";
-import { demoStore} from '@/store'
+import { bearStore} from '@/store'
 import {UseWallet} from "@/components/wallet/provider.tsx";
 import {useLoading} from "@/hooks/use-loading.ts";
 import {Spinner} from "@/components/ui/spinner.tsx";
@@ -34,20 +34,10 @@ const styleContextValue = { styles: [
     }
   ]};
 export function ReactPreview() {
-  const [dirty, setDirty] = useState(demoStore.dirty || false)
-  const demo = useStore(demoStore)
-  const [data, setData] = useState(demo)
+  const demo = useStore(bearStore, (state)=>state)
+  const [data, setData] = useState(bearStore.state)
   const isLoading = useLoading()
 
-  useEffect(() => {
-    const stateSync = setTimeout(()=>{
-      if(diff(data, demo).length > 0) {
-        demoStore.setState(()=>data)
-        setDirty(false)
-      }
-    }, 1000)
-    return ()=> clearTimeout(stateSync)
-  }, [data, demo]);
   if(isLoading){
     return <div className="min-h-52"><Spinner/></div>
   }
@@ -55,15 +45,16 @@ export function ReactPreview() {
   return (<JsonFormsStyleContext.Provider value={styleContextValue}>
     <div className="min-h-52">
     <JsonForms
-      data={data}
+      data={demo}
       renderers={vanillaRenderers}
       cells={vanillaCells}
       onChange={({ data }) => {
-        setDirty(true)
-        setData(data)
+        if(diff(data, demo).length > 0) {
+          bearStore.setState(()=>data)
+        }
       }}
     />
-    {dirty && <p>Records are dirty</p>}
+    {bearStore.dirty && <p>Records are dirty</p>}
     </div>
   </JsonFormsStyleContext.Provider>)
 }

@@ -2,19 +2,21 @@ import {useEffect, useState} from "react";
 import { UseWallet } from "./wallet/provider";
 import {useLoading} from "@/hooks/use-loading.ts";
 import {useStore} from '@tanstack/react-store'
-import {demoStore} from "@/store.ts";
+import {bearStore} from "@/store.ts";
 import { Spinner } from "./ui/spinner";
 import { Textarea } from "@/components/ui/textarea"
 
 export function ReactEditor() {
   const [tab, setTab] = useState<'render' | 'schema' | 'data' >('render')
   const [schema, setSchema] = useState<any|null>(null)
-  const demo = useStore(demoStore)
+  const demo = useStore(bearStore)
   const [json, setJson] = useState<string>(demo ? JSON.stringify(demo, (_, v) => typeof v === 'bigint' ? v.toString() : v, 2) : '')
   const [error, setError] = useState<any>(null)
   const isLoading = useLoading()
 
   useEffect(()=>{
+    if(isLoading || bearStore.status !== 'ready') return
+    console.log(`[Editor] Updating JSON Data ${Object.keys(demo).length}`)
     setJson(JSON.stringify(demo, (_, v) => typeof v === 'bigint' ? v.toString() : v, 2))
   }, [demo])
   if(isLoading){
@@ -29,7 +31,10 @@ export function ReactEditor() {
         try{
           const json = JSON.parse(e.target.value)
           if(Object.keys(json).length === 0) throw new Error('Object is missing values')
-          demoStore.setState(()=>json)
+          if(bearStore.status === 'ready'){
+            bearStore.setState(()=>json)
+          }
+
           setError(null)
         } catch(e) {
           setError(e)
