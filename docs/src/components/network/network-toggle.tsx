@@ -1,21 +1,17 @@
-import {Button} from "@/components/ui/button.tsx";
-import {NetworkId, useNetwork, useWallet} from "@txnlab/use-wallet-react";
+import React from "react";
+import { Button } from "@/components/ui/button.tsx";
+import { useNetwork, useWallet } from "@txnlab/use-wallet-react";
 import {
-  DropdownMenu, DropdownMenuCheckboxItem,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 export function NetworkToggle() {
-  const manager = useWallet()
-  const {
-    activeNetwork,
-    setActiveNetwork,
-    networkConfig
-  } = useNetwork()
+  const { activeNetwork, setActiveNetwork, networkConfig } = useNetwork();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,16 +24,16 @@ export function NetworkToggle() {
           <DropdownMenuCheckboxItem
             key={networkId}
             checked={networkId === activeNetwork}
-            onCheckedChange={(checked)=>{
-              if(checked && networkId !== activeNetwork) {
-                setActiveNetwork(networkId)
+            onCheckedChange={(checked) => {
+              if (checked && networkId !== activeNetwork) {
+                setActiveNetwork(networkId);
               }
             }}
-          >{networkId}</DropdownMenuCheckboxItem>
+          >
+            {networkId}
+          </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-
-
-  )
+  );
 }

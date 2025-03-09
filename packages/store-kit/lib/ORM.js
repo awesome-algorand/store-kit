@@ -4,7 +4,7 @@ export class Orm {
     _algorand;
     _manager;
     stores = new Map();
-    constructor({ algorand, manager }) {
+    constructor({ algorand, manager, }) {
         this._algorand = algorand;
         this._manager = manager;
     }
@@ -17,7 +17,8 @@ export class Orm {
             throw new Error(`Store with appId ${appId} already exists`);
         }
         const store = new Store(await fromBoxes(this._algorand, appId));
-        await store.setAlgorand(this._algorand)
+        await store
+            .setAlgorand(this._algorand)
             .setManager(this._manager)
             .setAppId(appId, true);
         await store.init();
@@ -25,11 +26,11 @@ export class Orm {
         return store;
     }
     async create(name, initialState, refs) {
+        console.log(refs);
         const store = new Store(initialState);
-        store.setAlgorand(this._algorand)
-            .setManager(this._manager);
+        store.setAlgorand(this._algorand).setManager(this._manager);
         await store.init(name);
-        if (typeof store.appId === 'undefined') {
+        if (typeof store.appId === "undefined") {
             throw new Error(`Failed to initialize store with name ${name}`);
         }
         return store;

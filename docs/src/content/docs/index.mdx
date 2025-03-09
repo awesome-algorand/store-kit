@@ -5,22 +5,22 @@ template: splash
 ---
 
 import { Card,  Code, LinkCard, Tabs, TabItem } from '@astrojs/starlight/components';
-import {Editor} from '@/components/editor.tsx';
-import {Preview} from '@/components/preview.tsx';
-import {Controls} from '@/components/controls.tsx';
-import {StoreCode} from '@/components/code.tsx';
+import EditorIsland from '@/components/editor.island.tsx';
+import PreviewIsland from '@/components/preview.island.tsx';
+import ControlsIsland from '@/components/controls.island.tsx';
+import CodeIsland from '@/components/code.island.tsx';
 
 <p>This shows a basic example</p>
 
   <Tabs>
-    <TabItem label="Edit">
-      <Editor client:load/>
+  <ControlsIsland client:load />
+    <TabItem label="Editor">
+      <EditorIsland client:load/>
     </TabItem>
-    <TabItem label="Preview">
-      <Preview client:load />
+    <TabItem label="Form Preview">
+      <PreviewIsland client:load />
     </TabItem>
   </Tabs>
-<Controls client:load />
 <h4>Installing</h4>
 <Tabs>
   <TabItem label="npm">
@@ -39,18 +39,23 @@ import {StoreCode} from '@/components/code.tsx';
 <h4>store.ts</h4>
 <Tabs>
   <TabItem label="@txnlab/use-wallet">
-    <StoreCode client:load type="txnlab"/>
+    <CodeIsland client:load type="txnlab"/>
   </TabItem>
   <TabItem label="@algorandfoundation/algokit-utils">
-    <StoreCode client:load type="algokit"/>
+    <CodeIsland client:load type="algokit"/>
   </TabItem>
 </Tabs>
 
 <LinkCard
   title="Find out more"
-  href="/guides/example"
+  href="/justification"
   icon="pencil"
-  description="References, Detailed reference guides"
+  description="References, detailed guides and more!"
 />
 
 
+## TODO:
+
+- CRDT Storage or Delta Strategy (Dirty Records)
+- Array/Object index management
+- Bulk Delete Nested Object Keys

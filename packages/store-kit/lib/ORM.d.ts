@@ -6,7 +6,7 @@ export declare class Orm {
     private readonly _algorand;
     private readonly _manager;
     private readonly stores;
-    constructor({ algorand, manager }: {
+    constructor({ algorand, manager, }: {
         algorand: AlgorandClient;
         manager: WalletManager;
     });

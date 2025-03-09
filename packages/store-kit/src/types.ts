@@ -1,7 +1,6 @@
-import type {Address} from "algosdk";
-import type {SigningAccount, TransactionSignerAccount} from "@algorandfoundation/algokit-utils/types/account";
-import {AlgorandClient} from "@algorandfoundation/algokit-utils";
-import {WalletManager} from "@txnlab/use-wallet";
+import type { TransactionSignerAccount } from "@algorandfoundation/algokit-utils/types/account";
+import { AlgorandClient } from "@algorandfoundation/algokit-utils";
+import { WalletManager } from "@txnlab/use-wallet";
 
 /**
  * Represents a smart contract wallet capable of signing transactions.
@@ -26,12 +25,9 @@ import {WalletManager} from "@txnlab/use-wallet";
  * const deployer = await algorand.account.fromKmd('DEPLOYER')
  * ```
  */
-export type Deployer = TransactionSignerAccount
+export type Deployer = TransactionSignerAccount;
 
 export interface StoreInterface<TState> {
-  subscribe(callback: (state: any) => void): void;
-  state: TState;
-
   /**
    * Sets the manager for the store.
    *
@@ -70,7 +66,7 @@ export interface StoreInterface<TState> {
    *
    * @return {TState} The resulting state after the assembly process is completed.
    */
-  assemble(): Promise<TState>
+  assemble(): Promise<TState>;
 
   // TODO:
   // onDeploy(callback: (state: any) => void): void

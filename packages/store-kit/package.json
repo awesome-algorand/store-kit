@@ -46,7 +46,10 @@
     "generate": "mkdir -p src && concurrently \"npm run generate:*\"",
     "generate:lodash": "algokit generate client -l typescript -o src/lodash/client.ts ./lib/Lodash.arc32.json",
     "docs": "typedoc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "lint": "eslint",
+    "format": "prettier",
+    "bench": "vitest bench"
   },
   "peerDependencies": {
     "@algorandfoundation/algokit-utils": "^8.1.0"
@@ -57,12 +60,7 @@
     "@txnlab/use-wallet": "^4.0.0",
     "@types/lodash.get": "^4.4.9",
     "@types/lodash.set": "^4.3.9",
-    "@types/node": "^22.13.4",
-    "async-mutex": "^0.5.0",
-    "concurrently": "^9.1.2",
-    "typedoc": "^0.27.7",
-    "typescript": "^5.7.3",
-    "vitest": "^3.0.6"
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "@algorandfoundation/algo-models": "^0.0.8",

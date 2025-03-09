@@ -19,7 +19,7 @@ const baseUrl = "https://api.nf.domains"
 
 // Fetch the NfdRecords and save them to the fixtures directory
 await Promise.all(FIXTURE_TYPES.map(async (type)=>{
-  let data = await Promise.all(TEST_ADDRESSES.map(async (address)=>{
+  const data = await Promise.all(TEST_ADDRESSES.map(async (address)=>{
     // Lock the mutex to prevent rate limiting
     return mutex.runExclusive(async ()=>{
       const requestOptions ={ path:{ nameOrID: address}, query:{view: type}, baseUrl }

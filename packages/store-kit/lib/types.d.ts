@@ -26,8 +26,6 @@ import { WalletManager } from "@txnlab/use-wallet";
  */
 export type Deployer = TransactionSignerAccount;
 export interface StoreInterface<TState> {
-    subscribe(callback: (state: any) => void): void;
-    state: TState;
     /**
      * Sets the manager for the store.
      *

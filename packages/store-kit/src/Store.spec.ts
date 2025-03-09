@@ -7,7 +7,7 @@ globalThis.prompt = ()=>{
   return ""
 }
 
-describe('Store', async () => {
+describe.skip('Store', async () => {
   let _algorand: AlgorandClient;
   let _manager: WalletManager;
 

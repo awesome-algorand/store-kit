@@ -31,5 +31,5 @@
  * const mbr = toMBR(obj, paths)
  * ```
  */
-export declare function toMBR(obj: any, pathsCache?: (string | undefined)[]): bigint;
-export declare function getMBRDifference(a: any, b: any): Promise<bigint>;
+export declare function toMBR(obj: unknown, pathsCache?: (string | undefined)[]): bigint;
+export declare function getMBRDifference(a: unknown, b: unknown): Promise<bigint>;

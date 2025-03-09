@@ -1,15 +1,22 @@
-import chalk, { supportsColor } from 'chalk';
-import { Store as BaseStore } from '@tanstack/store';
+import chalk, { supportsColor } from "chalk";
+import { Store as BaseStore } from "@tanstack/store";
 import { NetworkId, WalletManager } from "@txnlab/use-wallet";
 import { decodeAddress } from "algosdk";
-import { get, LodashFactory } from "./lodash/index.js";
-import { deepMerge, diff, fromBoxes, toChunks, toMBR } from "./objects/index.js";
-import { ACTIVE_ADDRESS_REQUIRED, ALGORAND_CLIENT_REQUIRED, TYPED_CLIENT_EXISTS, TYPED_CLIENT_REQUIRED, WALLET_MANAGER_EXISTS, WALLET_MANAGER_REQUIRED } from "./errors";
+import { LodashFactory } from "./lodash/index.js";
+import { deepMerge, diff, fromBoxes, toChunks, toMBR, } from "./objects/index.js";
+import { ACTIVE_ADDRESS_REQUIRED, ALGORAND_CLIENT_REQUIRED, TYPED_CLIENT_EXISTS, TYPED_CLIENT_REQUIRED, WALLET_MANAGER_EXISTS, WALLET_MANAGER_REQUIRED, } from "./errors";
 import { getClient, NotFoundError } from "./clients.js";
 import { PREFIX } from "./objects/constants.js";
-const TAG = supportsColor ? '[' + chalk.bold('Store') + chalk.cyan('Kit') + ']' : '[StoreKit]';
-const ALGOKIT = supportsColor ? chalk.bold("@algokit") + "/" + chalk.cyanBright('clients') : '@algokit/clients';
-const TXNLAB = supportsColor ? chalk.bold("@txnlab") + "/" + chalk.green('use-wallet') : '@txnlab/use-wallet';
+import get from "lodash.get";
+const TAG = supportsColor
+    ? "[" + chalk.bold("Store") + chalk.cyan("Kit") + "]"
+    : "[StoreKit]";
+const ALGOKIT = supportsColor
+    ? chalk.bold("@algokit") + "/" + chalk.cyanBright("clients")
+    : "@algokit/clients";
+const TXNLAB = supportsColor
+    ? chalk.bold("@txnlab") + "/" + chalk.green("use-wallet")
+    : "@txnlab/use-wallet";
 /**
  * A specialized `Store` class extending from [@tanstack/store](https://tanstack.com/store),
  * designed for managing and interacting with application-level state on the Algorand blockchain.
@@ -35,7 +42,7 @@ const TXNLAB = supportsColor ? chalk.bold("@txnlab") + "/" + chalk.green('use-wa
  * @template T The type of the state managed by the store. This may be omitted in favor of type inference.
  */
 export class Store extends BaseStore {
-    status = 'unknown';
+    status = "unknown";
     deltas = new Map();
     network = NetworkId.LOCALNET;
     get dirty() {
@@ -137,7 +144,7 @@ export class Store extends BaseStore {
                     // Regularly just save
                     await this.save();
                     this.deltas.clear();
-                    this.status = 'ready';
+                    this.status = "ready";
                 }
             },
             updateFn: (previous) => {
@@ -145,12 +152,11 @@ export class Store extends BaseStore {
                     const nextState = updater(previous);
                     console.log(`${TAG} ⚡️ Emit state change (${this.status})`, diff(previous, nextState));
                     if (this.client) {
-                        diff(previous, nextState)
-                            .forEach((kv) => this.deltas.set(...kv));
+                        diff(previous, nextState).forEach((kv) => this.deltas.set(...kv));
                     }
                     return nextState;
                 };
-            }
+            },
         });
     }
     async balance() {
@@ -158,7 +164,9 @@ export class Store extends BaseStore {
         if (!this.algorand || !this.client) {
             return 0n;
         }
-        const account = await this.algorand.client.algod.accountInformation(this.client.appAddress).do();
+        const account = await this.algorand.client.algod
+            .accountInformation(this.client.appAddress)
+            .do();
         return account.amount;
     }
     setAccount(deployer, sync) {
@@ -225,7 +233,8 @@ export class Store extends BaseStore {
             }
             const isChangedAddress = manager?.activeAddress !== this.deployer?.addr.toString();
             const isChangedSigner = manager?.transactionSigner !== this.deployer?.signer;
-            if (isActiveWithoutDeployer || (isActiveWithDeployer && (isChangedAddress || isChangedSigner))) {
+            if (isActiveWithoutDeployer ||
+                (isActiveWithDeployer && (isChangedAddress || isChangedSigner))) {
                 console.log(`${TAG} 🔐 Updating the Deployer from ${this.deployer?.addr.toString() || "null"} to ${manager.activeAddress}`);
                 this.deployer = {
                     addr: decodeAddress(manager.activeAddress),
@@ -235,7 +244,8 @@ export class Store extends BaseStore {
                     console.log(this.client.appClient.state);
                 }
             }
-            if (state.activeNetwork !== this.network || manager.activeNetwork !== this.network) {
+            if (state.activeNetwork !== this.network ||
+                manager.activeNetwork !== this.network) {
                 console.log(`${TAG} ⚡️ Updating the Network state from ${this.network} to ${state.activeNetwork}`);
                 this.network = manager.activeNetwork;
             }
@@ -291,10 +301,14 @@ export class Store extends BaseStore {
         try {
             // Try to find an existing client
             console.log(this.deployer);
-            this.client = await getClient(this.algorand, this.appId ? this.appId : this.deployer ? this.deployer.addr.toString() : null, name);
+            this.client = await getClient(this.algorand, this.appId
+                ? this.appId
+                : this.deployer
+                    ? this.deployer.addr.toString()
+                    : null, name);
             console.log(`${TAG} 🍻 Welcome back! Loading existing store: ${name}`);
             this.appId = this.client.appId;
-            this.status = 'loading';
+            this.status = "loading";
             const boxData = await this.assemble();
             this.setState(() => boxData);
         }
@@ -310,9 +324,13 @@ export class Store extends BaseStore {
                     const factory = this.algorand.client.getTypedAppFactory(LodashFactory, {
                         deletable: true,
                         defaultSender: this.deployer.addr,
-                        defaultSigner: this.deployer.signer
+                        defaultSigner: this.deployer.signer,
                     });
-                    const { appClient } = await factory.deploy({ onUpdate: 'append', onSchemaBreak: 'append', appName: name });
+                    const { appClient } = await factory.deploy({
+                        onUpdate: "append",
+                        onSchemaBreak: "append",
+                        appName: name,
+                    });
                     await appClient.appClient.fundAppAccount({
                         amount: toMBR(this.state).microAlgo(),
                         sender: this.deployer.addr,
@@ -320,7 +338,7 @@ export class Store extends BaseStore {
                     this.client = appClient;
                     this.appId = appClient.appId;
                     await this.save();
-                    this.status = 'ready';
+                    this.status = "ready";
                 }
                 else {
                     throw e;
@@ -383,33 +401,66 @@ export class Store extends BaseStore {
         }
         const balance = await this.balance();
         const boxData = await this.assemble();
-        const requiredMbr = toMBR(deepMerge(boxData, { ...this.state })).microAlgo().microAlgos;
+        const requiredMbr = toMBR(deepMerge(boxData, { ...this.state })).microAlgo()
+            .microAlgos;
         const needsFunding = balance < requiredMbr;
-        console.log({ balance, count: this.state['count'], requiredMbr, needsFunding });
+        console.log({
+            balance,
+            count: this.state["count"],
+            requiredMbr,
+            needsFunding,
+        });
         // Save State On-Chain
         await Promise.all(this.toChunks().map(async (paths, idx) => {
             // TODO: Logical Grouping around Objects (aka Atomic Composed Objects)
             // TODO: Bulk Set/GET
             const atc = this.client.newGroup();
             if (needsFunding && idx === 0) {
-                console.log(`${TAG} Funding App Account`, requiredMbr, 'microAlgos', this.deployer);
+                console.log(`${TAG} Funding App Account`, requiredMbr, "microAlgos", this.deployer);
                 atc.addTransaction(await this.algorand.createTransaction.payment({
                     sender: this.deployer.addr,
                     receiver: this.client.appAddress,
-                    amount: (requiredMbr - balance).microAlgo()
+                    amount: (requiredMbr - balance).microAlgo(),
                 }), this.deployer.signer);
             }
             for (const path of paths) {
-                console.log(`%cGrouping ${path} with value: ${get(this.state, path)} for app ${this.client?.appId}`, 'color: green;');
+                console.log(`%cGrouping ${path} with value: ${get(this.state, path)} for app ${this.client?.appId}`, "color: green;");
                 atc.set({
-                    args: { path: path, value: get(this.state, path).toString() },
+                    args: {
+                        path: path,
+                        value: get(this.state, path).toString(),
+                    },
                     boxReferences: [`${PREFIX}${path}`],
                     sender: this.deployer.addr,
-                    signer: this.deployer.signer
+                    signer: this.deployer.signer,
                 });
             }
-            await atc.send().then(s => { console.log('done'); }).catch(e => console.error(e));
+            await atc
+                .send()
+                .then((s) => {
+                console.log("done");
+            })
+                .catch((e) => console.error(e));
         }));
+    }
+    async converge(state) {
+        const current = await this.assemble();
+        const delta = diff(current, state);
+        console.log(delta);
+        const atc = this.client.newGroup();
+        if (delta.length > 0) {
+            for (const [path, value] of delta) {
+                console.log(`%cGrouping ${path} with value: ${get(state, path)} for app ${this.client?.appId}`, "color: green;");
+                atc.set({
+                    args: {
+                        path: path,
+                        value: get(state, path).toString(),
+                    },
+                    boxReferences: [`${PREFIX}${path}`],
+                });
+            }
+        }
+        return atc;
     }
     /**
      * Assembles and retrieves data stored in the storage boxes of an application, decodes the content, and formats it into a structured object.
@@ -438,7 +489,7 @@ export class Store extends BaseStore {
         await this.client.send.delete.bare({
             sender: this.deployer.addr,
             signer: this.deployer.signer,
-            boxReferences: names.map(box => box.name),
+            boxReferences: names.map((box) => box.name),
         });
     }
 }

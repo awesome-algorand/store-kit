@@ -1,7 +1,7 @@
-import {bench, describe, expect} from "vitest";
-import {toMBR} from "./payments";
-import {faker} from "@faker-js/faker";
-const TOTAL = 100
+import { bench, describe } from "vitest";
+import { toMBR } from "./payments";
+import { faker } from "@faker-js/faker";
+const TOTAL = 100;
 export function createRandomUser() {
   return {
     appId: faker.number.int(),
@@ -27,27 +27,19 @@ export function createRandomLocation() {
     // streetAddress: faker.location.streetAddress(),
     // zipCode: faker.location.zipCode(),
     state: faker.location.state(),
-
   };
 }
 
 export const locations = faker.helpers.multiple(createRandomLocation, {
-  count: TOTAL/2,
+  count: TOTAL / 2,
 });
-describe("Feature Collection", () => {
-  if(typeof process.env.INTEGRATION === 'undefined'){
-    global.fetch = createMockFetch()
-  }
+describe("storekit/objects/payments", () => {
   bench("empty input", async () => {
-    await toFeatureCollection([])
-  })
+    toMBR({});
+  });
   bench("full fixture", async () => {
-    await toFeatureCollection(fullFixtures as NfdRecordCollection)
-  });
-  bench("tiny fixture", async () => {
-    await toFeatureCollection(tinyFixtures as NfdRecordCollection)
-  });
-  bench("brief fixture", async () => {
-    await toFeatureCollection(briefFixtures as NfdRecordCollection)
+    for (const user of users) {
+      toMBR(user);
+    }
   });
 });

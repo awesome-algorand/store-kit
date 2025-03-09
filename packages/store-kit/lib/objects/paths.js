@@ -6,21 +6,16 @@
  * @return {string[]} An array of strings representing the paths of the keys in dot notation.
  */
 export function toPaths(obj, parentKey) {
-    /**
-     * The result array to be returned.
-     */
     let result;
     // TODO: exclude the parent key from the result
     if (Array.isArray(obj)) {
         // Map the Array to paths
-        result = obj.flatMap((obj, idx) => toPaths(obj, (parentKey || '') + '[' + idx++ + ']'));
+        result = obj.flatMap((obj, idx) => toPaths(obj, (parentKey || "") + "[" + idx++ + "]"));
     }
     // TODO: better object detection
-    else if (Object.prototype.toString.call(obj) === '[object Object]') {
+    else if (Object.prototype.toString.call(obj) === "[object Object]") {
         // Map the Object Keys to paths
-        result = Object.keys(obj)
-            .flatMap((key) => toPaths(obj[key], key)
-            .map((subkey) => (parentKey ? parentKey + '.' : '') + subkey));
+        result = Object.keys(obj).flatMap((key) => toPaths(obj[key], key).map((subkey) => (parentKey ? parentKey + "." : "") + subkey));
     }
     // If the object is not an array or object, return an empty array
     else {

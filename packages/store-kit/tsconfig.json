@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
     "strict": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "module": "esnext",
     "target": "esnext",
     "sourceMap": true,
@@ -18,8 +17,14 @@
     "lib",
     "test/**/*.ts",
     "**/*.test.ts",
+    "**/*.fixtures.ts",
     "**/*.spec.ts",
     "**/*.bench.ts"
+  ],
+  "references": [
+    {
+      "path": "test/tsconfig.json"
+    }
   ],
   "typedocOptions": {
     "projectDocuments": ["src/*.md"],

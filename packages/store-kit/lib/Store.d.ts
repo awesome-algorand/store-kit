@@ -1,9 +1,9 @@
 import { AlgorandClient } from "@algorandfoundation/algokit-utils";
-import { Store as BaseStore } from '@tanstack/store';
+import { Store as BaseStore } from "@tanstack/store";
 import { NetworkId, WalletManager } from "@txnlab/use-wallet";
 import { LodashClient } from "./lodash/index.js";
 import type { Deployer, StoreInterface } from "./types.js";
-export type StoreStatus = 'unknown' | 'loading' | 'ready';
+export type StoreStatus = "unknown" | "loading" | "ready";
 /**
  * A specialized `Store` class extending from [@tanstack/store](https://tanstack.com/store),
  * designed for managing and interacting with application-level state on the Algorand blockchain.
@@ -187,6 +187,7 @@ export declare class Store<TState> extends BaseStore<TState> implements StoreInt
      * ```
      */
     save(): Promise<void>;
+    converge(state: any): Promise<import("./lodash/client.js").LodashComposer<[]>>;
     /**
      * Assembles and retrieves data stored in the storage boxes of an application, decodes the content, and formats it into a structured object.
      *

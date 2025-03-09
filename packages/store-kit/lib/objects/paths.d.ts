@@ -5,4 +5,4 @@
  * @param {string} parentKey The key or path of the parent object, used to build the complete key paths.
  * @return {string[]} An array of strings representing the paths of the keys in dot notation.
  */
-export declare function toPaths(obj: any, parentKey?: string): string[];
+export declare function toPaths(obj: unknown, parentKey?: string): string[];

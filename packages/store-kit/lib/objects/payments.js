@@ -1,8 +1,8 @@
 import get from "lodash.get";
-import { MAX_BOX_SIZE, MAX_KEY_SIZE, MIN_BALANCE, PER_BOX, PER_UNIT, PREFIX } from "./constants.js";
+import { MAX_BOX_SIZE, MAX_KEY_SIZE, MIN_BALANCE, PER_BOX, PER_UNIT, PREFIX, } from "./constants.js";
 import { toPaths } from "./paths.js";
 import { MaxSizeError } from "./errors.js";
-import { assemble, diff } from './state.js';
+import { assemble, diff } from "./state.js";
 /**
  * Calculates the minimum balance requirement (MBR) for an object.
  *
@@ -37,15 +37,15 @@ import { assemble, diff } from './state.js';
  * ```
  */
 export function toMBR(obj, pathsCache) {
-    if (typeof obj === 'undefined') {
+    if (typeof obj === "undefined") {
         throw new TypeError("Object is required");
     }
     let paths;
-    if (typeof pathsCache === 'undefined') {
-        paths = toPaths(obj).filter(path => typeof path !== 'undefined');
+    if (typeof pathsCache === "undefined") {
+        paths = toPaths(obj).filter((path) => typeof path !== "undefined");
     }
     else {
-        paths = pathsCache.filter(path => typeof path !== 'undefined');
+        paths = pathsCache.filter((path) => typeof path !== "undefined");
     }
     const encoder = new TextEncoder();
     return paths.reduce((acc, path) => {
@@ -54,11 +54,11 @@ export function toMBR(obj, pathsCache) {
         if (keySize > MAX_KEY_SIZE) {
             throw new MaxSizeError(`Key size exceeds maximum of ${MAX_KEY_SIZE}`);
         }
-        const boxSize = BigInt(encoder.encode(get(obj, path || '')).length);
+        const boxSize = BigInt(encoder.encode(get(obj, path || "")).length);
         if (boxSize > MAX_BOX_SIZE) {
             throw new MaxSizeError(`Box size exceeds maximum of ${MAX_BOX_SIZE}`);
         }
-        return acc + (PER_BOX + (PER_UNIT * (keySize + boxSize)));
+        return acc + (PER_BOX + PER_UNIT * (keySize + boxSize));
     }, BigInt(MIN_BALANCE));
 }
 export async function getMBRDifference(a, b) {

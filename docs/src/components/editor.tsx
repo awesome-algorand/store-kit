@@ -1,56 +1,129 @@
-import {useEffect, useState} from "react";
-import { UseWallet } from "./wallet/provider";
-import {useLoading} from "@/hooks/use-loading.ts";
-import {useStore} from '@tanstack/react-store'
-import {bearStore} from "@/store.ts";
-import { Spinner } from "./ui/spinner";
-import { Textarea } from "@/components/ui/textarea"
+import React from "react";
+import { useStore } from "@tanstack/react-store";
+import { bearStore } from "@/store.ts";
+import * as JSONEdit from "json-edit-react";
+import { Button } from "./ui/button";
+import { ModalToggle } from "@/components/wallet/modal-toggle.tsx";
+import { useNetwork, useWallet } from "@txnlab/use-wallet-react";
 
-export function ReactEditor() {
-  const [tab, setTab] = useState<'render' | 'schema' | 'data' >('render')
-  const [schema, setSchema] = useState<any|null>(null)
-  const demo = useStore(bearStore)
-  const [json, setJson] = useState<string>(demo ? JSON.stringify(demo, (_, v) => typeof v === 'bigint' ? v.toString() : v, 2) : '')
-  const [error, setError] = useState<any>(null)
-  const isLoading = useLoading()
+type AppMetadata = {
+  appId: number | null;
+  address: string | null;
+  balance: number | null;
+  stats: {
+    mbr: number | null;
+    keys: number | null;
+  };
+};
+type EditorProps = {
+  json: string;
+  onChange: JSONEdit.OnChangeFunction;
+  onDelete: JSONEdit.UpdateFunction;
+  onAdd: JSONEdit.UpdateFunction;
+  onUpdate: JSONEdit.UpdateFunction;
+  onEdit: JSONEdit.UpdateFunction;
+  error: Error | null;
+  app: AppMetadata;
+  isLoading: boolean;
+};
+const ROOT = "[StoreKit]";
+export function Editor(props: EditorProps) {
+  const { app, error, onChange, onDelete, onAdd, onUpdate, onEdit } = props;
+  const bears = useStore(bearStore);
+  const manager = useWallet();
+  const { activeNetwork } = useNetwork();
+  return (
+    <div className="not-content min-h-64">
+      <div className="text-lg text-gray-500 mb-2" style={{ marginTop: "10px" }}>
+        {app.appId && (
+          <div
+            className="flex items-center space-x-2 justify-between"
+            style={{ marginTop: "10px" }}
+          >
+            <p className="text-lg truncate">
+              {"Edit the"}
+              <strong>{" state "}</strong>
+              {"object 🤯, or use the above controls"}
+            </p>
+            <div className="truncate text-lg no-underline decoration-none">
+              {`ID: ${app.appId} 🎉 `}
 
-  useEffect(()=>{
-    if(isLoading || bearStore.status !== 'ready') return
-    console.log(`[Editor] Updating JSON Data ${Object.keys(demo).length}`)
-    setJson(JSON.stringify(demo, (_, v) => typeof v === 'bigint' ? v.toString() : v, 2))
-  }, [demo])
-  if(isLoading){
-    return <div className="min-h-52 border rounded-md flex w-full border-input bg-transparent px-3 py-2 text-base shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
-      <Spinner className={'h-24 w-24 m-auto'}/>
-    </div>
-  }
-  return (<>
-
-      <Textarea  className="resize-y min-h-52" value={json || ""} onChange={(e)=>{
-        setJson(e.target.value)
-        try{
-          const json = JSON.parse(e.target.value)
-          if(Object.keys(json).length === 0) throw new Error('Object is missing values')
-          if(bearStore.status === 'ready'){
-            bearStore.setState(()=>json)
-          }
-
-          setError(null)
-        } catch(e) {
-          setError(e)
-        }
-      }}/>
-        {error && (
-          <div style={{color: 'red', marginTop: '10px'}}>
-            <strong>Error:</strong> {error.message || 'Invalid JSON'}
+              <Button
+                className="text-lg text-underline bg-stone-950 border"
+                size="sm"
+                role="link"
+                asChild
+              >
+                <a
+                  className="not-content no-underline visited:text-lg"
+                  href={`https://lora.algokit.io/${activeNetwork}/application/${app.appId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {`View on Lora`}
+                </a>
+              </Button>
+            </div>
           </div>
         )}
-
-  </>)
-}
-
-export function Editor() {
-  return (<UseWallet>
-    <ReactEditor/>
-  </UseWallet>)
+        {!app.appId && !manager.activeWallet && (
+          <div
+            className="flex items-center space-x-2"
+            style={{ marginTop: "10px" }}
+          >
+            {"Get started by clicking"}
+            <ModalToggle />
+          </div>
+        )}
+        {!app.appId && manager.activeWallet && (
+          <div>
+            Application not found, deploy a fresh Store using the{" "}
+            <strong>Deploy</strong> button
+          </div>
+        )}
+      </div>
+      <JSONEdit.JsonEditor
+        maxWidth={"100%"}
+        restrictTypeSelection={[
+          "string",
+          "number",
+          // TODO: boolean support
+          // "boolean",
+          "object",
+          "array",
+        ]}
+        rootName={ROOT}
+        className="w-full"
+        restrictAdd={({ path }) => !app.appId || path[0] !== "state"}
+        restrictDelete={({ path }) =>
+          !app.appId ||
+          path[0] !== "state" ||
+          (path[0] === "state" && path.length === 1)
+        }
+        restrictEdit={({ path, value }) =>
+          !app.appId ||
+          path[0] !== "state" ||
+          typeof value === "object" ||
+          Array.isArray(value)
+        }
+        data={{ state: bears, contract: app }}
+        theme={JSONEdit.candyWrapperTheme}
+        onChange={onChange}
+        onDelete={onDelete}
+        onAdd={onAdd}
+        onUpdate={onUpdate}
+        onEdit={onEdit}
+      />
+      {/*<Textarea*/}
+      {/*  className="resize-y min-h-52"*/}
+      {/*  value={json || ""}*/}
+      {/*  onChange={onChange}*/}
+      {/*/>*/}
+      {error && (
+        <div style={{ color: "red", marginTop: "10px" }}>
+          <strong>Error:</strong> {error.message || "Invalid JSON"}
+        </div>
+      )}
+    </div>
+  );
 }
