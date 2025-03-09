@@ -7,7 +7,6 @@ import { deepMerge, diff, fromBoxes, toChunks, toMBR } from "./objects/index.js"
 import { ACTIVE_ADDRESS_REQUIRED, ALGORAND_CLIENT_REQUIRED, TYPED_CLIENT_EXISTS, TYPED_CLIENT_REQUIRED, WALLET_MANAGER_EXISTS, WALLET_MANAGER_REQUIRED } from "./errors";
 import { getClient, NotFoundError } from "./clients.js";
 import { PREFIX } from "./objects/constants.js";
-import set from "lodash.set";
 const TAG = supportsColor ? '[' + chalk.bold('Store') + chalk.cyan('Kit') + ']' : '[StoreKit]';
 const ALGOKIT = supportsColor ? chalk.bold("@algokit") + "/" + chalk.cyanBright('clients') : '@algokit/clients';
 const TXNLAB = supportsColor ? chalk.bold("@txnlab") + "/" + chalk.green('use-wallet') : '@txnlab/use-wallet';
@@ -135,16 +134,8 @@ export class Store extends BaseStore {
                 console.log(`${TAG} 🔀 Updated State ${this.status}`, this.state);
                 // Handle dirty state saves, skip the initial loading event
                 if (this.client && this.deltas.size > 0) {
-                    if (this.status !== "loading") {
-                        this.deltas.forEach((value, key) => {
-                            console.log(`settomg datastore ${key} to ${value}`);
-                            set(this.state, key.replace(PREFIX, ""), value);
-                            console.log(get(this.state, key.replace(PREFIX, "")));
-                        });
-                        this.setState(() => this.state);
-                    }
-                    if (this.status !== "loading")
-                        await this.save();
+                    // Regularly just save
+                    await this.save();
                     this.deltas.clear();
                     this.status = 'ready';
                 }
@@ -299,6 +290,7 @@ export class Store extends BaseStore {
         // TODO: Think about this problem a bit more, possibly at the ORM/Registry level
         try {
             // Try to find an existing client
+            console.log(this.deployer);
             this.client = await getClient(this.algorand, this.appId ? this.appId : this.deployer ? this.deployer.addr.toString() : null, name);
             console.log(`${TAG} 🍻 Welcome back! Loading existing store: ${name}`);
             this.appId = this.client.appId;
@@ -391,7 +383,7 @@ export class Store extends BaseStore {
         }
         const balance = await this.balance();
         const boxData = await this.assemble();
-        const requiredMbr = toMBR(deepMerge(boxData, this.state)).microAlgo().microAlgos;
+        const requiredMbr = toMBR(deepMerge(boxData, { ...this.state })).microAlgo().microAlgos;
         const needsFunding = balance < requiredMbr;
         console.log({ balance, count: this.state['count'], requiredMbr, needsFunding });
         // Save State On-Chain
@@ -408,7 +400,7 @@ export class Store extends BaseStore {
                 }), this.deployer.signer);
             }
             for (const path of paths) {
-                console.log(`%cGrouping ${path} with value: ${get(this.state, path)}`, 'color: green;');
+                console.log(`%cGrouping ${path} with value: ${get(this.state, path)} for app ${this.client?.appId}`, 'color: green;');
                 atc.set({
                     args: { path: path, value: get(this.state, path).toString() },
                     boxReferences: [`${PREFIX}${path}`],
@@ -416,7 +408,7 @@ export class Store extends BaseStore {
                     signer: this.deployer.signer
                 });
             }
-            return await atc.send();
+            await atc.send().then(s => { console.log('done'); }).catch(e => console.error(e));
         }));
     }
     /**

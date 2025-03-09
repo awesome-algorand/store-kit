@@ -73,7 +73,6 @@
     "chalk": "^5.4.1",
     "json-edit-react": "^1.23.1",
     "lodash.get": "^4.4.2",
-    "lodash.set": "^4.3.2",
-    "yjs": "^13.6.24"
+    "lodash.set": "^4.3.2"
   }
 }

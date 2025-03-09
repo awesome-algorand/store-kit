@@ -12,7 +12,8 @@ you can easily store and retrieve data from the blockchain and map it to a more 
 - Storage solution preserves and improves on **Contract<->Contract** integrations
   by having a standardized mapping of the keys to values.
 
-<Chart/>
+#### Data Storage Costs:
+![chart.png](chart.png)
 
 ### How:
 KISS and Leverage lodash paths for JSON, which are similar to jq

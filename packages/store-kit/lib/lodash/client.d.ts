@@ -141,12 +141,6 @@ export type LodashCreateCallParams = Expand<AppClientBareCallParams & {
     onComplete?: OnApplicationComplete.NoOpOC;
 } & CreateSchema>;
 /**
- * Defines supported update method params for this smart contract
- */
-export type LodashUpdateCallParams = Expand<AppClientBareCallParams> & {
-    method?: never;
-};
-/**
  * Defines supported delete method params for this smart contract
  */
 export type LodashDeleteCallParams = Expand<AppClientBareCallParams> & {
@@ -160,10 +154,6 @@ export type LodashDeployParams = Expand<Omit<AppFactoryDeployParams, 'createPara
      * Create transaction parameters to use if a create needs to be issued as part of deployment; use `method` to define ABI call (if available) or leave out for a bare call (if available)
      */
     createParams?: LodashCreateCallParams;
-    /**
-     * Update transaction parameters to use if a create needs to be issued as part of deployment; use `method` to define ABI call (if available) or leave out for a bare call (if available)
-     */
-    updateParams?: LodashUpdateCallParams;
     /**
      * Delete transaction parameters to use if a create needs to be issued as part of deployment; use `method` to define ABI call (if available) or leave out for a bare call (if available)
      */
@@ -374,7 +364,9 @@ export declare class LodashFactory {
                     localInts: number;
                     localByteSlices: number;
                 };
-                maxFee?: import("@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
+                maxFee?: import(
+                /** The name of the app. */
+                "@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
                 note?: string | Uint8Array | undefined;
                 args?: Uint8Array[] | undefined;
                 signer?: TransactionSigner | import("@algorandfoundation/algokit-utils/types/account").TransactionSignerAccount | undefined;
@@ -401,39 +393,6 @@ export declare class LodashFactory {
             }>;
         };
         /**
-         * Gets available deployUpdate methods
-         */
-        deployUpdate: {
-            /**
-             * Updates an existing instance of the Lodash smart contract using a bare call.
-             *
-             * @param params The params for the bare (raw) call
-             * @returns The params for a deployUpdate call
-             */
-            bare: (params?: Expand<AppClientBareCallParams & AppClientCompilationParams>) => {
-                maxFee?: import("@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
-                note?: string | Uint8Array | undefined;
-                args?: Uint8Array[] | undefined;
-                signer?: TransactionSigner | import("@algorandfoundation/algokit-utils/types/account").TransactionSignerAccount | undefined;
-                lease?: string | Uint8Array | undefined;
-                rekeyTo?: string | Address | undefined;
-                staticFee?: import("@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
-                extraFee?: import("@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
-                validityWindow?: number | bigint | undefined;
-                firstValidRound?: bigint | undefined;
-                lastValidRound?: bigint | undefined;
-                accountReferences?: (string | Address)[] | undefined;
-                appReferences?: bigint[] | undefined;
-                assetReferences?: bigint[] | undefined;
-                boxReferences?: (import("@algorandfoundation/algokit-utils/types/app-manager").BoxIdentifier | import("@algorandfoundation/algokit-utils/types/app-manager").BoxReference)[] | undefined;
-                sender?: string | Address | undefined;
-            } & {
-                sender: Address;
-                signer: TransactionSigner | import("@algorandfoundation/algokit-utils/types/account").TransactionSignerAccount | undefined;
-                onComplete: OnApplicationComplete.UpdateApplicationOC;
-            };
-        };
-        /**
          * Gets available deployDelete methods
          */
         deployDelete: {
@@ -458,12 +417,7 @@ export declare class LodashFactory {
                 accountReferences?: (string | Address)[] | undefined;
                 appReferences?: bigint[] | undefined;
                 assetReferences?: bigint[] | undefined;
-                boxReferences?: (import("@algorandfoundation/algokit-utils/types/app-manager").BoxIdentifier | import("@algorandfoundation/algokit-utils/types/app-manager" /**
-                 * Deletes an existing instance of the Lodash smart contract using a bare call.
-                 *
-                 * @param params The params for the bare (raw) call
-                 * @returns The delete result
-                 */).BoxReference)[] | undefined;
+                boxReferences?: (import("@algorandfoundation/algokit-utils/types/app-manager").BoxIdentifier | import("@algorandfoundation/algokit-utils/types/app-manager").BoxReference)[] | undefined;
                 sender?: string | Address | undefined;
             } & {
                 sender: Address;
@@ -581,39 +535,6 @@ export declare class LodashClient {
      */
     readonly params: {
         /**
-         * Gets available update methods
-         */
-        update: {
-            /**
-             * Updates an existing instance of the Lodash smart contract using a bare call.
-             *
-             * @param params The params for the bare (raw) call
-             * @returns The update result
-             */
-            bare: (params?: Expand<AppClientBareCallParams & AppClientCompilationParams>) => Promise<{
-                sender: string | Address;
-                signer?: TransactionSigner | import("@algorandfoundation/algokit-utils/types/account").TransactionSignerAccount | undefined;
-                rekeyTo?: string | Address | undefined;
-                note?: string | Uint8Array | undefined;
-                lease?: string | Uint8Array | undefined;
-                staticFee?: import("@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
-                extraFee?: import("@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
-                maxFee?: import("@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
-                validityWindow?: number | bigint | undefined;
-                firstValidRound?: bigint | undefined;
-                lastValidRound?: bigint | undefined;
-                appId: bigint;
-                onComplete?: OnApplicationComplete.UpdateApplicationOC | undefined;
-                args?: Uint8Array[] | undefined;
-                accountReferences?: (string | Address)[] | undefined;
-                appReferences?: bigint[] | undefined;
-                assetReferences?: bigint[] | undefined;
-                boxReferences?: (import("@algorandfoundation/algokit-utils/types/app-manager").BoxIdentifier | import("@algorandfoundation/algokit-utils/types/app-manager").BoxReference)[] | undefined;
-                approvalProgram: string | Uint8Array;
-                clearStateProgram: string | Uint8Array;
-            }>;
-        };
-        /**
          * Gets available delete methods
          */
         delete: {
@@ -684,18 +605,6 @@ export declare class LodashClient {
      * Create transactions for the current app
      */
     readonly createTransaction: {
-        /**
-         * Gets available update methods
-         */
-        update: {
-            /**
-             * Updates an existing instance of the Lodash smart contract using a bare call.
-             *
-             * @param params The params for the bare (raw) call
-             * @returns The update result
-             */
-            bare: (params?: Expand<AppClientBareCallParams & AppClientCompilationParams>) => Promise<Transaction>;
-        };
         /**
          * Gets available delete methods
          */
@@ -787,29 +696,6 @@ export declare class LodashClient {
      * Send calls to the current app
      */
     readonly send: {
-        /**
-         * Gets available update methods
-         */
-        update: {
-            /**
-             * Updates an existing instance of the Lodash smart contract using a bare call.
-             *
-             * @param params The params for the bare (raw) call
-             * @returns The update result
-             */
-            bare: (params?: Expand<AppClientBareCallParams & AppClientCompilationParams & SendParams>) => Promise<{
-                compiledApproval?: import("@algorandfoundation/algokit-utils/types/app").CompiledTeal | undefined;
-                compiledClear?: import("@algorandfoundation/algokit-utils/types/app").CompiledTeal | undefined;
-                groupId: string;
-                txIds: string[];
-                returns?: ABIReturn[] | undefined;
-                confirmations: modelsv2.PendingTransactionResponse[];
-                transactions: Transaction[];
-                confirmation: modelsv2.PendingTransactionResponse;
-                transaction: Transaction;
-                return?: ABIReturn | undefined;
-            }>;
-        };
         /**
          * Gets available delete methods
          */

@@ -159,29 +159,16 @@ export class Store<TState> extends BaseStore<TState> implements StoreInterface<T
         console.log(`${TAG} 🔀 Updated State ${this.status}`, this.state)
         // Handle dirty state saves, skip the initial loading event
         if(this.client && this.deltas.size > 0) {
-          if(this.status !== "loading"){
-            this.deltas.forEach((value, key) => {
-              console.log(`settomg datastore ${key} to ${value}`)
-               set(this.state as object, key.replace(PREFIX, ""), value)
-                console.log(get(this.state as object, key.replace(PREFIX, "")))
-            })
-            // this.setState(()=>this.state)
-            // this.status = 'ready'
-          }
           // Regularly just save
-          if(this.status !== "loading") await this.save()
+          await this.save()
           this.deltas.clear()
           this.status = 'ready'
         }
-
       },
       updateFn: (previous)=>{
         return (updater: AnyUpdater) => {
           const nextState = updater(previous)
           console.log(`${TAG} ⚡️ Emit state change (${this.status})`, diff(previous, nextState))
-
-
-
           if(this.client) {
            diff(previous, nextState)
              .forEach((kv: [path: string, value: string]) => this.deltas.set(...kv))
@@ -339,6 +326,7 @@ export class Store<TState> extends BaseStore<TState> implements StoreInterface<T
     // TODO: Think about this problem a bit more, possibly at the ORM/Registry level
     try {
       // Try to find an existing client
+      console.log(this.deployer)
       this.client = await getClient(this.algorand, this.appId? this.appId : this.deployer ? this.deployer.addr.toString() : null, name)
       console.log(`${TAG} 🍻 Welcome back! Loading existing store: ${name}`)
       this.appId = this.client.appId
@@ -432,7 +420,7 @@ export class Store<TState> extends BaseStore<TState> implements StoreInterface<T
     const balance = await this.balance();
     const boxData = await this.assemble()
 
-    const requiredMbr =  toMBR(deepMerge(boxData, this.state)).microAlgo().microAlgos
+    const requiredMbr =  toMBR(deepMerge(boxData, {...this.state})).microAlgo().microAlgos
     const needsFunding = balance < requiredMbr;
     console.log({balance, count: (this.state as any)['count'], requiredMbr, needsFunding})
     // Save State On-Chain
@@ -450,7 +438,7 @@ export class Store<TState> extends BaseStore<TState> implements StoreInterface<T
           }), this.deployer!.signer)
         }
         for (const path of paths) {
-          console.log(`%cGrouping ${path} with value: ${get(this.state, path as string)}`, 'color: green;')
+          console.log(`%cGrouping ${path} with value: ${get(this.state, path as string)} for app ${this.client?.appId}`, 'color: green;')
           atc.set({
             args: {path: path as string, value: get(this.state, path as string).toString()},
             boxReferences: [`${PREFIX}${path}`],
@@ -458,7 +446,7 @@ export class Store<TState> extends BaseStore<TState> implements StoreInterface<T
             signer: this.deployer!.signer
           })
         }
-        return await atc.send()
+        await atc.send().then(s=>{console.log('done')}).catch(e=>console.error(e))
       })
     )
   }

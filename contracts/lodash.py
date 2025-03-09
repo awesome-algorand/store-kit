@@ -15,11 +15,6 @@ class Lodash(ARC4Contract):
     def __init__(self) -> None:
         self.public = BoxMap(String, String, key_prefix=b"orm_")
 
-    @baremethod(allow_actions=["UpdateApplication"])
-    def on_update(self) -> None:
-        assert Txn.sender == Global.creator_address
-        assert TemplateVar[bool]("UPDATABLE")
-
     @baremethod(allow_actions=["DeleteApplication"])
     def on_delete(self) -> None:
         assert Txn.sender == Global.creator_address

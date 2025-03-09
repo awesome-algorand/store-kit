@@ -7,6 +7,8 @@ import {useLoading} from "@/hooks/use-loading.ts";
 import {Spinner} from "@/components/ui/spinner.tsx";
 import {useEffect, useState} from "react";
 import {diff} from '@awesome-algorand/store-kit/objects'
+import {Button} from "@/components/ui/button.tsx";
+import { cn } from "@/lib/utils";
 const styleContextValue = { styles: [
     {
       name: 'control.input',
@@ -34,9 +36,17 @@ const styleContextValue = { styles: [
     }
   ]};
 export function ReactPreview() {
+  const [dirty, setDirty] = useState(false)
   const demo = useStore(bearStore, (state)=>state)
-  const [data, setData] = useState(bearStore.state)
+  const [_data, setData] = useState(()=>demo)
   const isLoading = useLoading()
+
+  useEffect(() => {
+    if(isLoading) return
+    if(diff(_data, demo).length > 0) {
+      setData(demo)
+    }
+  }, [demo]);
 
   if(isLoading){
     return <div className="min-h-52"><Spinner/></div>
@@ -45,16 +55,20 @@ export function ReactPreview() {
   return (<JsonFormsStyleContext.Provider value={styleContextValue}>
     <div className="min-h-52">
     <JsonForms
-      data={demo}
+      data={_data}
       renderers={vanillaRenderers}
       cells={vanillaCells}
       onChange={({ data }) => {
-        if(diff(data, demo).length > 0) {
-          bearStore.setState(()=>data)
-        }
+        bearStore.state = data
+        // bearStore.setState(()=>data)
+        setData(data)
+        setDirty(true)
       }}
     />
-    {bearStore.dirty && <p>Records are dirty</p>}
+    {dirty &&<div className={cn("flex")}><Button onClick={()=>{
+      bearStore.state = _data
+      bearStore.save()
+    }} variant="default" color="green-900" >Save</Button> <p>Records are dirty</p></div>}
     </div>
   </JsonFormsStyleContext.Provider>)
 }
