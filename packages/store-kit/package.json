@@ -21,6 +21,16 @@
     "lib",
     "src"
   ],
+  "typesVersions": {
+    "*": {
+      "objects": [
+        "./lib/objects/index.d.ts"
+      ],
+      "lodash": [
+        "./lib/lodash/index.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
@@ -31,8 +41,8 @@
       "default": "./lib/objects/index.js"
     },
     "./lodash": {
-      "types": "./lib/lodash.d.ts",
-      "default": "./lib/lodash.js"
+      "types": "./lib/lodash/index.d.ts",
+      "default": "./lib/lodash/index.js"
     },
     "./lodash.arc32.json": "./lib/Lodash.arc32.json",
     "./lodash.approval.teal": "./lib/Lodash.approval.teal",
@@ -52,7 +62,7 @@
     "bench": "vitest bench"
   },
   "peerDependencies": {
-    "@algorandfoundation/algokit-utils": "^8.1.0"
+    "@algorandfoundation/algokit-utils": "^9.0.0"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",

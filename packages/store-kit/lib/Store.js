@@ -170,7 +170,7 @@ export class Store extends BaseStore {
         return account.amount;
     }
     setAccount(deployer, sync) {
-        console.log(`${TAG} ⚙️ Setting Account: ${deployer}`);
+        console.log(`${TAG} ⚙️ Setting Account: ${deployer?.addr}`);
         this.deployer = deployer;
         return this;
     }
@@ -241,7 +241,7 @@ export class Store extends BaseStore {
                     signer: manager.transactionSigner,
                 };
                 if (this.client) {
-                    console.log(this.client.appClient.state);
+                    // console.log(this.client.appClient.state);
                 }
             }
             if (state.activeNetwork !== this.network ||
@@ -387,7 +387,7 @@ export class Store extends BaseStore {
      * ```
      */
     async save() {
-        console.log(`${TAG} 💾 Saving State`, this);
+        console.log(`${TAG} 💾 Saving State`);
         if (!this.algorand) {
             throw new TypeError("AlgorandClient is required");
         }
@@ -404,12 +404,12 @@ export class Store extends BaseStore {
         const requiredMbr = toMBR(deepMerge(boxData, { ...this.state })).microAlgo()
             .microAlgos;
         const needsFunding = balance < requiredMbr;
-        console.log({
-            balance,
-            count: this.state["count"],
-            requiredMbr,
-            needsFunding,
-        });
+        // console.log({
+        //   balance,
+        //   count: (this.state as any)["count"],
+        //   requiredMbr,
+        //   needsFunding,
+        // });
         // Save State On-Chain
         await Promise.all(this.toChunks().map(async (paths, idx) => {
             // TODO: Logical Grouping around Objects (aka Atomic Composed Objects)
@@ -446,7 +446,6 @@ export class Store extends BaseStore {
     async converge(state) {
         const current = await this.assemble();
         const delta = diff(current, state);
-        console.log(delta);
         const atc = this.client.newGroup();
         if (delta.length > 0) {
             for (const [path, value] of delta) {
@@ -485,7 +484,6 @@ export class Store extends BaseStore {
             throw new Error(TYPED_CLIENT_REQUIRED);
         }
         const names = await this.algorand.app.getBoxNames(this.client.appId);
-        console.log(names);
         await this.client.send.delete.bare({
             sender: this.deployer.addr,
             signer: this.deployer.signer,

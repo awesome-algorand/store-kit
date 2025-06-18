@@ -22,9 +22,11 @@ export function toPaths(obj, parentKey) {
         result = [];
     }
     // Return the result array with the parent key appended
-    if (parentKey)
+    if (typeof parentKey === "string") {
         return [...result, parentKey];
-    else
+    }
+    else {
         return result;
+    }
 }
 //# sourceMappingURL=paths.js.map

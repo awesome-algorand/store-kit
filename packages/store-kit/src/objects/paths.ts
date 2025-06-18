@@ -32,6 +32,9 @@ export function toPaths(obj: unknown, parentKey?: string): string[] {
   }
 
   // Return the result array with the parent key appended
-  if (parentKey) return [...result, parentKey];
-  else return result;
+  if (typeof parentKey === "string") {
+    return [...result, parentKey];
+  } else {
+    return result;
+  }
 }

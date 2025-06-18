@@ -1,0 +1,3 @@
+[submodule "packages/algokit-subscriber-ts"]
+	path = packages/algokit-subscriber-ts
+	url = git@github.com:awesome-algorand/algokit-subscriber-ts.git

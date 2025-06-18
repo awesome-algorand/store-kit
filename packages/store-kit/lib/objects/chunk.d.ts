@@ -1,4 +1,4 @@
-export declare function toChunks(obj: object): (string | undefined)[][];
+export declare function toChunks(obj: any): (string | undefined)[][];
 /**
  * Splits a given string into chunks of specified size.
  *

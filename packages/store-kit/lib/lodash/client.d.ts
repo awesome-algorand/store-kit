@@ -3,7 +3,7 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^7
  */
-import { AlgorandClientInterface } from '@algorandfoundation/algokit-utils/types/algorand-client-interface';
+import { type AlgorandClient } from '@algorandfoundation/algokit-utils/types/algorand-client';
 import { ABIReturn } from '@algorandfoundation/algokit-utils/types/app';
 import { Arc56Contract } from '@algorandfoundation/algokit-utils/types/app-arc56';
 import { AppClient as _AppClient, AppClientMethodCallParams, AppClientParams, AppClientBareCallParams, CallOnComplete, AppClientCompilationParams, ResolveAppClientByCreatorAndName, ResolveAppClientByNetwork, CloneAppClientParams } from '@algorandfoundation/algokit-utils/types/app-client';
@@ -41,6 +41,9 @@ export type LodashArgs = {
      * The object representation of the arguments for each method
      */
     obj: {
+        'assign(string)void': {
+            value: string;
+        };
         'set(string,string)void': {
             path: string;
             value: string;
@@ -63,6 +66,7 @@ export type LodashArgs = {
      * The tuple representation of the arguments for each method
      */
     tuple: {
+        'assign(string)void': [value: string];
         'set(string,string)void': [path: string, value: string];
         'get(string)string': [path: string];
         'remove(string)void': [path: string];
@@ -74,6 +78,7 @@ export type LodashArgs = {
  * The return type for each method
  */
 export type LodashReturns = {
+    'assign(string)void': void;
     'set(string,string)void': void;
     'get(string)string': string;
     'remove(string)void': void;
@@ -87,7 +92,11 @@ export type LodashTypes = {
     /**
      * Maps method signatures / names to their argument and return types.
      */
-    methods: Record<'set(string,string)void' | 'set', {
+    methods: Record<'assign(string)void' | 'assign', {
+        argsObj: LodashArgs['obj']['assign(string)void'];
+        argsTuple: LodashArgs['tuple']['assign(string)void'];
+        returns: LodashReturns['assign(string)void'];
+    }> & Record<'set(string,string)void' | 'set', {
         argsObj: LodashArgs['obj']['set(string,string)void'];
         argsTuple: LodashArgs['tuple']['set(string,string)void'];
         returns: LodashReturns['set(string,string)void'];
@@ -108,6 +117,21 @@ export type LodashTypes = {
         argsTuple: LodashArgs['tuple']['reclaim(uint64)void'];
         returns: LodashReturns['reclaim(uint64)void'];
     }>;
+    /**
+     * Defines the shape of the state of the application.
+     */
+    state: {
+        global: {
+            keys: {
+                /**
+                 * Number of mutations
+                 */
+                counter: bigint;
+                type: BinaryState;
+            };
+            maps: {};
+        };
+    };
 };
 /**
  * Defines the possible abi call signatures.
@@ -132,6 +156,10 @@ export type MethodArgs<TSignature extends LodashSignatures> = LodashTypes['metho
  * Maps a method signature from the Lodash smart contract to the method's return type
  */
 export type MethodReturn<TSignature extends LodashSignatures> = LodashTypes['methods'][TSignature]['returns'];
+/**
+ * Defines the shape of the keyed global state of the application.
+ */
+export type GlobalKeysState = LodashTypes['state']['global']['keys'];
 /**
  * Defines supported create method params for this smart contract
  */
@@ -163,6 +191,13 @@ export type LodashDeployParams = Expand<Omit<AppFactoryDeployParams, 'createPara
  * Exposes methods for constructing `AppClient` params objects for ABI calls to the Lodash smart contract
  */
 export declare abstract class LodashParamsFactory {
+    /**
+     * Constructs a no op call for the assign(string)void ABI method
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static assign(params: CallParams<LodashArgs['obj']['assign(string)void'] | LodashArgs['tuple']['assign(string)void']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
     /**
      * Constructs a no op call for the set(string,string)void ABI method
      *
@@ -220,7 +255,7 @@ export declare class LodashFactory {
     /** The ARC-56 app spec being used */
     get appSpec(): Arc56Contract;
     /** A reference to the underlying `AlgorandClient` this app factory is using. */
-    get algorand(): AlgorandClientInterface;
+    get algorand(): AlgorandClient;
     /**
      * Returns a new `AppClient` client for an app instance of the given ID.
      *
@@ -364,9 +399,7 @@ export declare class LodashFactory {
                     localInts: number;
                     localByteSlices: number;
                 };
-                maxFee?: import(
-                /** The name of the app. */
-                "@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
+                maxFee?: import("@algorandfoundation/algokit-utils/types/amount").AlgoAmount | undefined;
                 note?: string | Uint8Array | undefined;
                 args?: Uint8Array[] | undefined;
                 signer?: TransactionSigner | import("@algorandfoundation/algokit-utils/types/account").TransactionSignerAccount | undefined;
@@ -529,7 +562,7 @@ export declare class LodashClient {
     /** The ARC-56 app spec being used */
     get appSpec(): Arc56Contract;
     /** A reference to the underlying `AlgorandClient` this app client is using. */
-    get algorand(): AlgorandClientInterface;
+    get algorand(): AlgorandClient;
     /**
      * Get parameters to create transactions for the current app. A good mental model for this is that these parameters represent a deferred transaction creation.
      */
@@ -553,6 +586,15 @@ export declare class LodashClient {
          * @returns The clearState result
          */
         clearState: (params?: Expand<AppClientBareCallParams>) => import("@algorandfoundation/algokit-utils/types/composer").AppCallParams;
+        /**
+         * Makes a call to the Lodash smart contract using the `assign(string)void` ABI method.
+         *
+         * @param params The params for the smart contract call
+         * @returns The call params
+         */
+        assign: (params: CallParams<LodashArgs["obj"]["assign(string)void"] | LodashArgs["tuple"]["assign(string)void"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<AppCallMethodCall>;
         /**
          * Makes a call to the Lodash smart contract using the `set(string,string)void` ABI method.
          *
@@ -624,6 +666,19 @@ export declare class LodashClient {
          * @returns The clearState result
          */
         clearState: (params?: Expand<AppClientBareCallParams>) => Promise<Transaction>;
+        /**
+         * Makes a call to the Lodash smart contract using the `assign(string)void` ABI method.
+         *
+         * @param params The params for the smart contract call
+         * @returns The call transaction
+         */
+        assign: (params: CallParams<LodashArgs["obj"]["assign(string)void"] | LodashArgs["tuple"]["assign(string)void"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            transactions: Transaction[];
+            methodCalls: Map<number, import("algosdk").ABIMethod>;
+            signers: Map<number, TransactionSigner>;
+        }>;
         /**
          * Makes a call to the Lodash smart contract using the `set(string,string)void` ABI method.
          *
@@ -734,6 +789,24 @@ export declare class LodashClient {
             return?: ABIReturn | undefined;
         }>;
         /**
+         * Makes a call to the Lodash smart contract using the `assign(string)void` ABI method.
+         *
+         * @param params The params for the smart contract call
+         * @returns The call result
+         */
+        assign: (params: CallParams<LodashArgs["obj"]["assign(string)void"] | LodashArgs["tuple"]["assign(string)void"]> & SendParams & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            return: (undefined | LodashReturns["assign(string)void"]);
+            returns?: ABIReturn[] | undefined | undefined;
+            groupId: string;
+            txIds: string[];
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+        }>;
+        /**
          * Makes a call to the Lodash smart contract using the `set(string,string)void` ABI method.
          *
          * @param params The params for the smart contract call
@@ -836,10 +909,36 @@ export declare class LodashClient {
     /**
      * Methods to access state for the current Lodash app
      */
-    state: {};
+    state: {
+        /**
+         * Methods to access global state for the current Lodash app
+         */
+        global: {
+            /**
+             * Get all current keyed values from global state
+             */
+            getAll: () => Promise<Partial<Expand<GlobalKeysState>>>;
+            /**
+             * Get the current value of the counter key in global state
+             */
+            counter: () => Promise<bigint | undefined>;
+            /**
+             * Get the current value of the type key in global state
+             */
+            type: () => Promise<BinaryState>;
+        };
+    };
     newGroup(): LodashComposer;
 }
 export type LodashComposer<TReturns extends [...any[]] = []> = {
+    /**
+     * Calls the assign(string)void ABI method.
+     *
+     * @param args The arguments for the contract call
+     * @param params Any additional parameters for the call
+     * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
+     */
+    assign(params?: CallParams<LodashArgs['obj']['assign(string)void'] | LodashArgs['tuple']['assign(string)void']>): LodashComposer<[...TReturns, LodashReturns['assign(string)void'] | undefined]>;
     /**
      * Calls the set(string,string)void ABI method.
      *

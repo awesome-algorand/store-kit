@@ -4,90 +4,99 @@
 // contracts.lodash.Lodash.__algopy_entrypoint_with_init() -> uint64:
 main:
     intcblock 1 0 TMPL_DELETABLE
-    bytecblock 0x6f726d5f
-    // /home/zero/Projects/store-kit/contracts/lodash.py:7
+    bytecblock "count" 0x6f726d5f
+    txn ApplicationID
+    bnz main_after_if_else@2
+    // /home/zero/Projects/store-kit/contracts/lodash.py:17
+    // self.counter = GlobalState(UInt64(0), key="count", description="Number of mutations")
+    bytec_0 // "count"
+    intc_1 // 0
+    app_global_put
+
+main_after_if_else@2:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:8
     // class Lodash(ARC4Contract):
     txn NumAppArgs
-    bz main_bare_routing@10
-    pushbytess 0xa8617ccd 0xc0850aee 0x8e8900b9 0x53013bdb 0x4eff516d // method "set(string,string)void", method "get(string)string", method "remove(string)void", method "concat(string,string)void", method "reclaim(uint64)void"
+    bz main_bare_routing@11
+    pushbytess 0xf27452b2 0xa8617ccd 0xc0850aee 0x8e8900b9 0x53013bdb 0x4eff516d // method "assign(string)void", method "set(string,string)void", method "get(string)string", method "remove(string)void", method "concat(string,string)void", method "reclaim(uint64)void"
     txna ApplicationArgs 0
-    match main_set_route@5 main_get_route@6 main_remove_route@7 main_concat_route@8 main_reclaim_route@9
+    match main_assign_route@5 main_set_route@6 main_get_route@7 main_remove_route@8 main_concat_route@9 main_reclaim_route@10
 
-main_after_if_else@13:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:7
+main_after_if_else@14:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:8
     // class Lodash(ARC4Contract):
     intc_1 // 0
     return
 
-main_reclaim_route@9:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:52
+main_reclaim_route@10:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:63
     // @abimethod()
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // /home/zero/Projects/store-kit/contracts/lodash.py:7
+    // /home/zero/Projects/store-kit/contracts/lodash.py:8
     // class Lodash(ARC4Contract):
     txna ApplicationArgs 1
     btoi
-    // /home/zero/Projects/store-kit/contracts/lodash.py:52
+    // /home/zero/Projects/store-kit/contracts/lodash.py:63
     // @abimethod()
     callsub reclaim
     intc_0 // 1
     return
 
-main_concat_route@8:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:44
+main_concat_route@9:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:55
     // @abimethod()
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // /home/zero/Projects/store-kit/contracts/lodash.py:7
+    // /home/zero/Projects/store-kit/contracts/lodash.py:8
     // class Lodash(ARC4Contract):
     txna ApplicationArgs 1
     extract 2 0
     txna ApplicationArgs 2
     extract 2 0
-    // /home/zero/Projects/store-kit/contracts/lodash.py:44
+    // /home/zero/Projects/store-kit/contracts/lodash.py:55
     // @abimethod()
     callsub concat
     intc_0 // 1
     return
 
-main_remove_route@7:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:36
+main_remove_route@8:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:47
     // @abimethod()
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // /home/zero/Projects/store-kit/contracts/lodash.py:7
+    // /home/zero/Projects/store-kit/contracts/lodash.py:8
     // class Lodash(ARC4Contract):
     txna ApplicationArgs 1
     extract 2 0
-    // /home/zero/Projects/store-kit/contracts/lodash.py:36
+    // /home/zero/Projects/store-kit/contracts/lodash.py:47
     // @abimethod()
     callsub remove
     intc_0 // 1
     return
 
-main_get_route@6:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:29
+main_get_route@7:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:40
     // @abimethod()
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // /home/zero/Projects/store-kit/contracts/lodash.py:7
+    // /home/zero/Projects/store-kit/contracts/lodash.py:8
     // class Lodash(ARC4Contract):
     txna ApplicationArgs 1
     extract 2 0
-    // /home/zero/Projects/store-kit/contracts/lodash.py:29
+    // /home/zero/Projects/store-kit/contracts/lodash.py:40
     // @abimethod()
     callsub get
     dup
@@ -103,44 +112,62 @@ main_get_route@6:
     intc_0 // 1
     return
 
-main_set_route@5:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:23
+main_set_route@6:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:33
     // @abimethod()
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // /home/zero/Projects/store-kit/contracts/lodash.py:7
+    // /home/zero/Projects/store-kit/contracts/lodash.py:8
     // class Lodash(ARC4Contract):
     txna ApplicationArgs 1
     extract 2 0
     txna ApplicationArgs 2
     extract 2 0
-    // /home/zero/Projects/store-kit/contracts/lodash.py:23
+    // /home/zero/Projects/store-kit/contracts/lodash.py:33
     // @abimethod()
     callsub set
     intc_0 // 1
     return
 
-main_bare_routing@10:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:7
+main_assign_route@5:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:26
+    // @abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // /home/zero/Projects/store-kit/contracts/lodash.py:8
+    // class Lodash(ARC4Contract):
+    txna ApplicationArgs 1
+    extract 2 0
+    // /home/zero/Projects/store-kit/contracts/lodash.py:26
+    // @abimethod()
+    callsub assign
+    intc_0 // 1
+    return
+
+main_bare_routing@11:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:8
     // class Lodash(ARC4Contract):
     pushint 5 // 5
     intc_1 // 0
     txn OnCompletion
-    match main_on_delete@11 main___algopy_default_create@12
-    b main_after_if_else@13
+    match main_on_delete@12 main___algopy_default_create@13
+    b main_after_if_else@14
 
-main___algopy_default_create@12:
+main___algopy_default_create@13:
     txn ApplicationID
     !
     assert // can only call when creating
     intc_0 // 1
     return
 
-main_on_delete@11:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:18
+main_on_delete@12:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:21
     // @baremethod(allow_actions=["DeleteApplication"])
     txn ApplicationID
     assert // can only call when not creating
@@ -151,38 +178,73 @@ main_on_delete@11:
 
 // contracts.lodash.Lodash.on_delete() -> void:
 on_delete:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:20
+    // /home/zero/Projects/store-kit/contracts/lodash.py:23
     // assert Txn.sender == Global.creator_address
     txn Sender
     global CreatorAddress
     ==
     assert
-    // /home/zero/Projects/store-kit/contracts/lodash.py:21
+    // /home/zero/Projects/store-kit/contracts/lodash.py:24
     // assert TemplateVar[UInt64]("DELETABLE")
     intc_2 // TMPL_DELETABLE
     assert
     retsub
 
 
-// contracts.lodash.Lodash.set(path: bytes, value: bytes) -> void:
-set:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:23-24
+// contracts.lodash.Lodash.assign(value: bytes) -> void:
+assign:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:26-27
     // @abimethod()
-    // def set(self, path: String, value: String) -> None:
-    proto 2 0
-    // /home/zero/Projects/store-kit/contracts/lodash.py:25
+    // def assign(self, value: String) -> None:
+    proto 1 0
+    // /home/zero/Projects/store-kit/contracts/lodash.py:28
     // assert Txn.sender == Global.creator_address
     txn Sender
     global CreatorAddress
     ==
     assert
-    // /home/zero/Projects/store-kit/contracts/lodash.py:26
+    // /home/zero/Projects/store-kit/contracts/lodash.py:29
+    // log(b"Setting type to {value}")
+    pushbytes 0x53657474696e67207479706520746f207b76616c75657d
+    log
+    // /home/zero/Projects/store-kit/contracts/lodash.py:30
+    // self.type.value = value
+    pushbytes "type"
+    frame_dig -1
+    app_global_put
+    // /home/zero/Projects/store-kit/contracts/lodash.py:31
+    // self.counter.value = self.counter.value + 1
+    intc_1 // 0
+    bytec_0 // "count"
+    app_global_get_ex
+    assert // check self.counter exists
+    intc_0 // 1
+    +
+    bytec_0 // "count"
+    swap
+    app_global_put
+    retsub
+
+
+// contracts.lodash.Lodash.set(path: bytes, value: bytes) -> void:
+set:
+    // /home/zero/Projects/store-kit/contracts/lodash.py:33-34
+    // @abimethod()
+    // def set(self, path: String, value: String) -> None:
+    proto 2 0
+    // /home/zero/Projects/store-kit/contracts/lodash.py:35
+    // assert Txn.sender == Global.creator_address
+    txn Sender
+    global CreatorAddress
+    ==
+    assert
+    // /home/zero/Projects/store-kit/contracts/lodash.py:36
     // log(b"Setting {path} to {value}")
     pushbytes 0x53657474696e67207b706174687d20746f207b76616c75657d
     log
-    // /home/zero/Projects/store-kit/contracts/lodash.py:27
+    // /home/zero/Projects/store-kit/contracts/lodash.py:37
     // self.public[path] = value
-    bytec_0 // 0x6f726d5f
+    bytec_1 // 0x6f726d5f
     frame_dig -2
     concat
     dup
@@ -190,35 +252,46 @@ set:
     pop
     frame_dig -1
     box_put
+    // /home/zero/Projects/store-kit/contracts/lodash.py:38
+    // self.counter.value = self.counter.value + 1
+    intc_1 // 0
+    bytec_0 // "count"
+    app_global_get_ex
+    assert // check self.counter exists
+    intc_0 // 1
+    +
+    bytec_0 // "count"
+    swap
+    app_global_put
     retsub
 
 
 // contracts.lodash.Lodash.get(path: bytes) -> bytes:
 get:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:29-30
+    // /home/zero/Projects/store-kit/contracts/lodash.py:40-41
     // @abimethod()
     // def get(self, path: String) -> String:
     proto 1 1
-    // /home/zero/Projects/store-kit/contracts/lodash.py:31
+    // /home/zero/Projects/store-kit/contracts/lodash.py:42
     // assert Txn.sender == Global.creator_address
     txn Sender
     global CreatorAddress
     ==
     assert
-    // /home/zero/Projects/store-kit/contracts/lodash.py:32
+    // /home/zero/Projects/store-kit/contracts/lodash.py:43
     // log(b"Getting {path} to {value}")
     pushbytes 0x47657474696e67207b706174687d20746f207b76616c75657d
     log
-    // /home/zero/Projects/store-kit/contracts/lodash.py:33
+    // /home/zero/Projects/store-kit/contracts/lodash.py:44
     // assert path in self.public
-    bytec_0 // 0x6f726d5f
+    bytec_1 // 0x6f726d5f
     frame_dig -1
     concat
     dup
     box_len
     bury 1
     assert
-    // /home/zero/Projects/store-kit/contracts/lodash.py:34
+    // /home/zero/Projects/store-kit/contracts/lodash.py:45
     // return self.public[path]
     box_get
     assert // check self.public entry exists
@@ -227,29 +300,29 @@ get:
 
 // contracts.lodash.Lodash.remove(path: bytes) -> void:
 remove:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:36-37
+    // /home/zero/Projects/store-kit/contracts/lodash.py:47-48
     // @abimethod()
     // def remove(self, path: String) -> None:
     proto 1 0
-    // /home/zero/Projects/store-kit/contracts/lodash.py:38
+    // /home/zero/Projects/store-kit/contracts/lodash.py:49
     // assert Txn.sender == Global.creator_address
     txn Sender
     global CreatorAddress
     ==
     assert
-    // /home/zero/Projects/store-kit/contracts/lodash.py:39
+    // /home/zero/Projects/store-kit/contracts/lodash.py:50
     // log(b"Removing {path}")
     pushbytes 0x52656d6f76696e67207b706174687d
     log
-    // /home/zero/Projects/store-kit/contracts/lodash.py:40
+    // /home/zero/Projects/store-kit/contracts/lodash.py:51
     // assert path in self.public
-    bytec_0 // 0x6f726d5f
+    bytec_1 // 0x6f726d5f
     frame_dig -1
     concat
     box_len
     bury 1
     assert
-    // /home/zero/Projects/store-kit/contracts/lodash.py:42
+    // /home/zero/Projects/store-kit/contracts/lodash.py:53
     // assert ref.delete()
     frame_dig -1
     box_del
@@ -259,30 +332,30 @@ remove:
 
 // contracts.lodash.Lodash.concat(path: bytes, value: bytes) -> void:
 concat:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:44-45
+    // /home/zero/Projects/store-kit/contracts/lodash.py:55-56
     // @abimethod()
     // def concat(self, path: String, value: String) -> None:
     proto 2 0
-    // /home/zero/Projects/store-kit/contracts/lodash.py:47
+    // /home/zero/Projects/store-kit/contracts/lodash.py:58
     // assert Txn.sender == Global.creator_address
     txn Sender
     global CreatorAddress
     ==
     assert
-    // /home/zero/Projects/store-kit/contracts/lodash.py:48
+    // /home/zero/Projects/store-kit/contracts/lodash.py:59
     // log(b"Adding {value} to {path}")
     pushbytes 0x416464696e67207b76616c75657d20746f207b706174687d
     log
-    // /home/zero/Projects/store-kit/contracts/lodash.py:49
+    // /home/zero/Projects/store-kit/contracts/lodash.py:60
     // assert path in self.public
-    bytec_0 // 0x6f726d5f
+    bytec_1 // 0x6f726d5f
     frame_dig -2
     concat
     dup
     box_len
     bury 1
     assert
-    // /home/zero/Projects/store-kit/contracts/lodash.py:50
+    // /home/zero/Projects/store-kit/contracts/lodash.py:61
     // self.public[path] = self.public[path] + value
     dup
     box_get
@@ -298,21 +371,21 @@ concat:
 
 // contracts.lodash.Lodash.reclaim(amount: uint64) -> void:
 reclaim:
-    // /home/zero/Projects/store-kit/contracts/lodash.py:52-53
+    // /home/zero/Projects/store-kit/contracts/lodash.py:63-64
     // @abimethod()
     // def reclaim(self, amount: UInt64) -> None:
     proto 1 0
-    // /home/zero/Projects/store-kit/contracts/lodash.py:54
+    // /home/zero/Projects/store-kit/contracts/lodash.py:65
     // assert Txn.sender == Global.creator_address
     txn Sender
     global CreatorAddress
     ==
     assert
-    // /home/zero/Projects/store-kit/contracts/lodash.py:55
+    // /home/zero/Projects/store-kit/contracts/lodash.py:66
     // log(b"Reclaiming MBR")
     pushbytes 0x5265636c61696d696e67204d4252
     log
-    // /home/zero/Projects/store-kit/contracts/lodash.py:56
+    // /home/zero/Projects/store-kit/contracts/lodash.py:67
     // itxn.Payment(sender=Global.current_application_address, receiver=Global.creator_address, amount=amount, fee=0).submit()
     itxn_begin
     global CurrentApplicationAddress
