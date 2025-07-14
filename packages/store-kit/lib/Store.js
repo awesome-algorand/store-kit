@@ -300,7 +300,6 @@ export class Store extends BaseStore {
         // TODO: Think about this problem a bit more, possibly at the ORM/Registry level
         try {
             // Try to find an existing client
-            console.log(this.deployer);
             this.client = await getClient(this.algorand, this.appId
                 ? this.appId
                 : this.deployer
@@ -310,7 +309,10 @@ export class Store extends BaseStore {
             this.appId = this.client.appId;
             this.status = "loading";
             const boxData = await this.assemble();
-            this.setState(() => boxData);
+            this.setState(() => {
+                this.status = "ready";
+                return boxData;
+            });
         }
         catch (e) {
             if (e instanceof NotFoundError) {

@@ -4,15 +4,14 @@ import { bearStore } from "@/store.ts";
 import React, { useEffect, useState } from "react";
 import type { OnChangeFunction } from "json-edit-react";
 import { toMBR, toPaths } from "@awesome-algorand/store-kit/objects";
-import { withManager } from "@/hooks/use-wallet.tsx";
+import { UseWallet } from "@/hooks/use-wallet.tsx";
 import { Editor } from "@/components/editor.tsx";
+import { useControls, UseControls } from "./controls.hooks";
+import { useLoading } from "@/hooks/use-loading.tsx";
 
-export function EditorController({
-  isLoading,
-}: {
-  isLoading: boolean;
-  manager: WalletManager;
-}) {
+export function EditorController() {
+  const isLoading = useLoading();
+  const controls = useControls();
   // Hydrate the State
   const demo = useStore(bearStore);
   const [json, setJson] = useState<string>(
@@ -40,27 +39,24 @@ export function EditorController({
     );
   }, [demo]);
 
-  // Handle changes from the Editor
-  const onChange: OnChangeFunction = ({ newValue, name }) => {
-    console.log(`[Editor] Updating JSON Data ${newValue} ${name}`);
-    if (bearStore.status === "ready") {
-      console.log("STATE");
-      // bearStore.setState(() => json);
-    }
-    return newValue;
-  };
   return (
     <Editor
       app={{
-        appId: bearStore.appId ? Number(bearStore.appId) : null,
-        address: bearStore.client?.appAddress.toString() || null,
-        balance: null,
+        appId: controls.state.contract.appId
+          ? Number(controls.state.contract.appId)
+          : null,
+        address: controls.state.contract.address?.toString() || null,
+        balance: controls.state.contract.balance
+          ? Number(controls.state.contract.balance.microAlgo().algos)
+          : null,
         stats: {
           mbr: Number(toMBR(demo).microAlgo().algos),
           keys: toPaths(demo).length,
         },
       }}
-      onChange={onChange}
+      onChange={({ newValue, name }) => {
+        return newValue;
+      }}
       onDelete={() => {
         console.log("delete");
       }}
@@ -93,5 +89,13 @@ export function EditorController({
   );
 }
 
-export const EditorIsland = withManager(EditorController);
+export const EditorIsland = () => {
+  return (
+    <UseWallet>
+      <UseControls>
+        <EditorController />
+      </UseControls>
+    </UseWallet>
+  );
+};
 export default EditorIsland;

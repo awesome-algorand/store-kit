@@ -56,7 +56,7 @@ export declare class Store<TState> extends BaseStore<TState> implements StoreInt
     /**
      * Experimental: On-chain client for the Lodash application.
      */
-    protected client: LodashClient | null;
+    client: LodashClient | null;
     /**
      * @inheritDoc Deployer
      */

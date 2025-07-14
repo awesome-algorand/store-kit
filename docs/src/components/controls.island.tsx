@@ -1,22 +1,32 @@
-import { UseWallet, withManager } from "@/hooks/use-wallet.tsx";
-import React, { type ReactNode, useState } from "react";
+import { UseWallet } from "@/hooks/use-wallet.tsx";
+import React, { useState } from "react";
 import { Controls } from "@/components/controls.tsx";
-import { useLoading } from "@/hooks/use-loading.tsx";
-import { bearStore } from "@/store.ts";
 
-import {
-  UseControls,
-  withControls,
-  withControlsContext,
-} from "@/components/controls.hooks.tsx";
+import { useControls, UseControls } from "@/components/controls.hooks.tsx";
+import { useWallet } from "@txnlab/use-wallet-react";
+import type { WalletManager } from "@txnlab/use-wallet";
 
-export function ControlsController({ controls, manager, isLoading }) {
-  console.log(controls, manager, isLoading);
+export function ControlsController() {
+  const controls = useControls();
+  const manager = useWallet();
+  const [open, setOpen] = useState(false);
   return (
-    <Controls controls={controls} manager={manager} isLoading={isLoading} />
+    <Controls
+      open={open}
+      onOpenChange={setOpen}
+      controls={controls}
+      manager={manager as unknown as WalletManager}
+      isLoading={!manager.isReady}
+    />
   );
 }
-export const ControlsIsland = withManager(
-  withControlsContext(ControlsController),
-);
+export const ControlsIsland = () => {
+  return (
+    <UseWallet>
+      <UseControls>
+        <ControlsController />
+      </UseControls>
+    </UseWallet>
+  );
+};
 export default ControlsIsland;

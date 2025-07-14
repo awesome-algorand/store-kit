@@ -1,13 +1,14 @@
 import React from "react";
 import { useStore } from "@tanstack/react-store";
 import { bearStore } from "@/store";
-import { withManager } from "@/hooks/use-wallet.tsx";
 import { useEffect, useMemo, useState } from "react";
 import { diff } from "@awesome-algorand/store-kit/objects";
 import debounce from "lodash.debounce";
-import type { WalletManager } from "@txnlab/use-wallet";
 import { Preview, SaveAction } from "@/components/preview.tsx";
-import { withControls } from "@/components/controls.hooks.tsx";
+import { UseControls, useControls } from "@/components/controls.hooks.tsx";
+import { useWallet } from "@txnlab/use-wallet-react";
+import { useLoading } from "@/hooks/use-loading.tsx";
+import { UseWallet } from "@/hooks/use-wallet.tsx";
 
 /**
  * Handles the preview interaction and data state synchronization logic for rendering a preview
@@ -20,18 +21,15 @@ import { withControls } from "@/components/controls.hooks.tsx";
  * @return A React component that renders the preview interface, with functionality to
  * handle changes, save modified data, and indicate loading status.
  */
-export function PreviewController({
-  isLoading,
-}: {
-  isLoading: boolean;
-  manager: WalletManager;
-}) {
+export function PreviewController() {
+  const manager = useWallet();
+  const isLoading = useLoading();
   /**
    * `bears` retrieves and provides access to the state and actions
    * from the specified `bearStore` using the `useStore` function.
    */
   const bears = useStore(bearStore);
-
+  const controls = useControls();
   /**
    * Represents the data structure containing from the preview.
    */
@@ -59,9 +57,6 @@ export function PreviewController({
    */
   useEffect(() => {
     if (isLoading) return;
-    console.log(
-      `[Starlight Docs] Bears data changed: ${diff(previewData, bears).length}`,
-    );
     if (isDirty) {
       setPreviewData(bears);
       setIsSaving(false);
@@ -84,6 +79,7 @@ export function PreviewController({
           isLoading={isSaving}
           onSaveClick={debounce(() => {
             setIsSaving(true);
+            //@ts-expect-error, todo fix types
             bearStore.state = previewData;
             bearStore.save().then(() => {
               bearStore.setState(() => bearStore.state);
@@ -106,5 +102,13 @@ export function PreviewController({
  * such as state or behavior management.
  *
  */
-export const PreviewIsland = withManager(PreviewController);
+export const PreviewIsland = () => {
+  return (
+    <UseWallet>
+      <UseControls>
+        <PreviewController />
+      </UseControls>
+    </UseWallet>
+  );
+};
 export default PreviewIsland;

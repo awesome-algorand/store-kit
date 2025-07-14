@@ -41,9 +41,9 @@ export function Editor(props: EditorProps) {
             style={{ marginTop: "10px" }}
           >
             <p className="text-lg truncate">
-              {"Edit the"}
-              <strong>{" state "}</strong>
-              {"object 🤯, or use the above controls"}
+              {"Use the "}
+              {<strong>Form Preview</strong>}
+              {" to test the application"}
             </p>
             <div className="truncate text-lg no-underline decoration-none">
               {`ID: ${app.appId} 🎉 `}
@@ -94,17 +94,22 @@ export function Editor(props: EditorProps) {
         ]}
         rootName={ROOT}
         className="w-full"
-        restrictAdd={({ path }) => !app.appId || path[0] !== "state"}
-        restrictDelete={({ path }) =>
-          !app.appId ||
-          path[0] !== "state" ||
-          (path[0] === "state" && path.length === 1)
+        restrictAdd={
+          ({ path }) => true
+          // !app.appId || path[0] !== "state"
         }
-        restrictEdit={({ path, value }) =>
-          !app.appId ||
-          path[0] !== "state" ||
-          typeof value === "object" ||
-          Array.isArray(value)
+        restrictDelete={
+          ({ path }) => true
+          // !app.appId ||
+          // path[0] !== "state" ||
+          // (path[0] === "state" && path.length === 1)
+        }
+        restrictEdit={
+          ({ path, value }) => true
+          // !app.appId ||
+          // path[0] !== "state" ||
+          // typeof value === "object" ||
+          // Array.isArray(value)
         }
         data={{ state: bears, contract: app }}
         theme={JSONEdit.candyWrapperTheme}
@@ -114,11 +119,6 @@ export function Editor(props: EditorProps) {
         onUpdate={onUpdate}
         onEdit={onEdit}
       />
-      {/*<Textarea*/}
-      {/*  className="resize-y min-h-52"*/}
-      {/*  value={json || ""}*/}
-      {/*  onChange={onChange}*/}
-      {/*/>*/}
       {error && (
         <div style={{ color: "red", marginTop: "10px" }}>
           <strong>Error:</strong> {error.message || "Invalid JSON"}
