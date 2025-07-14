@@ -102,7 +102,7 @@ export class Store<TState>
   /**
    * Experimental: On-chain client for the Lodash application.
    */
-  protected client: LodashClient | null = null;
+  client: LodashClient | null = null;
 
   /**
    * @inheritDoc Deployer
@@ -169,12 +169,12 @@ export class Store<TState>
    *
    * @param {TState} initialState initial data to populate the store with
    */
-  constructor(initialState: TState) {
+  constructor(initialState: TState, options: { sync?: boolean } = {}) {
     super(initialState, {
       onUpdate: async () => {
-        console.log(`${TAG} 🔀 Updated State ${this.status}`, this.state);
+        console.log(`${TAG} 🔀 Updated State (${this.status})`, this.state);
         // Handle dirty state saves, skip the initial loading event
-        if (this.client && this.deltas.size > 0) {
+        if (this.client && this.deltas.size > 0 && options?.sync) {
           // Regularly just save
           await this.save();
           this.deltas.clear();
@@ -187,6 +187,8 @@ export class Store<TState>
           console.log(
             `${TAG} ⚡️ Emit state change (${this.status})`,
             diff(previous, nextState),
+            previous,
+            nextState,
           );
           if (this.client) {
             diff(previous, nextState).forEach((kv) => this.deltas.set(...kv));
@@ -340,7 +342,30 @@ export class Store<TState>
     }
     return this;
   }
-
+  async findExistingClient(name?: string) {
+    if (!this.algorand) {
+      throw new Error(ALGORAND_CLIENT_REQUIRED);
+    }
+    if (!this.deployer && !this.appId) {
+      throw new Error(
+        "Deployer and AppId are required to find an existing client",
+      );
+    }
+    // Try to find an existing client
+    try {
+      return await getClient(
+        this.algorand,
+        this.appId
+          ? this.appId
+          : this.deployer
+            ? this.deployer.addr.toString()
+            : null,
+        name,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
   /**
    * Initializes the store with the provided configurations.
    * This method sets up a client instance, handles deployment if necessary, and syncs the state as required.
@@ -350,7 +375,7 @@ export class Store<TState>
    * @throws Error Will throw an error if a client already exists, if the Algorand client is missing,
    *         or if required prerequisites for initialization or deployment are not met.
    */
-  async init(name: string = "Lodash", sync: boolean = true) {
+  async init(name: string = "Lodash", sync: boolean = false) {
     console.log(
       `${TAG} 🎉 Initializing Store with ${name} ${sync ? "and syncing" : "without syncing"}`,
     );
@@ -362,60 +387,48 @@ export class Store<TState>
     if (!this.algorand) {
       throw new Error(ALGORAND_CLIENT_REQUIRED);
     }
-    // TODO: Think about this problem a bit more, possibly at the ORM/Registry level
-    try {
-      // Try to find an existing client
-      console.log(this.deployer);
-      this.client = await getClient(
-        this.algorand,
-        this.appId
-          ? this.appId
-          : this.deployer
-            ? this.deployer.addr.toString()
-            : null,
-        name,
-      );
+
+    // Try to find an existing client
+    this.client = await this.findExistingClient(name);
+    if (this.client === null) {
+      // Exit early when we cannot deploy
+      if (sync && !this.deployer) {
+        throw new Error(ACTIVE_ADDRESS_REQUIRED);
+      }
+      // Handle deploying the contracts
+      if (sync && this.deployer) {
+        console.log(`${TAG} 🚀 Deploying App: ${name}`);
+        const factory = this.algorand.client.getTypedAppFactory(LodashFactory, {
+          deletable: true,
+          defaultSender: this.deployer.addr,
+          defaultSigner: this.deployer.signer,
+        });
+        const { appClient } = await factory.deploy({
+          onUpdate: "append",
+          onSchemaBreak: "append",
+          appName: name,
+        });
+        await appClient.appClient.fundAppAccount({
+          amount: toMBR(this.state).microAlgo(),
+          sender: this.deployer.addr,
+        });
+        this.client = appClient;
+        this.appId = appClient.appId;
+        await this.save();
+        this.setState(() => {
+          this.status = "ready";
+          return this.state;
+        });
+      }
+    } else {
       console.log(`${TAG} 🍻 Welcome back! Loading existing store: ${name}`);
       this.appId = this.client.appId;
-      this.status = "loading";
       const boxData = await this.assemble();
-      this.setState(() => boxData);
-    } catch (e) {
-      if (e instanceof NotFoundError) {
-        // Exit early when we cannot deploy
-        if (sync && !this.deployer) {
-          throw new Error(ACTIVE_ADDRESS_REQUIRED);
-        }
-        // Handle deploying the contracts
-        if (sync && this.deployer) {
-          console.log(`${TAG} 🚀 Deploying App: ${name}`);
-          const factory = this.algorand.client.getTypedAppFactory(
-            LodashFactory,
-            {
-              deletable: true,
-              defaultSender: this.deployer.addr,
-              defaultSigner: this.deployer.signer,
-            },
-          );
-          const { appClient } = await factory.deploy({
-            onUpdate: "append",
-            onSchemaBreak: "append",
-            appName: name,
-          });
-          await appClient.appClient.fundAppAccount({
-            amount: toMBR(this.state).microAlgo(),
-            sender: this.deployer.addr,
-          });
-          this.client = appClient;
-          this.appId = appClient.appId;
-          await this.save();
-          this.status = "ready";
-        } else {
-          throw e;
-        }
-      } else {
-        throw e;
-      }
+
+      this.setState(() => {
+        this.status = "ready";
+        return boxData;
+      });
     }
 
     return this;
@@ -568,19 +581,12 @@ export class Store<TState>
     return await fromBoxes<TState>(this.algorand, this.client?.appId);
   }
 
-  async destroy() {
-    if (!this.algorand) {
-      throw new Error(ALGORAND_CLIENT_REQUIRED);
-    }
-    if (!this.client) {
-      throw new Error(TYPED_CLIENT_REQUIRED);
-    }
-    const names = await this.algorand.app.getBoxNames(this.client.appId);
-    console.log(names);
-    await this.client.send.delete.bare({
-      sender: this.deployer!.addr,
-      signer: this.deployer!.signer,
-      boxReferences: names.map((box) => box.name),
-    });
+  async destroy(state: TState) {
+    this.appId = null;
+    this.client = null;
+    this.deployer = null;
+    this.manager = null;
+    this.deltas = new Map();
+    this.setState(() => state);
   }
 }

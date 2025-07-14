@@ -11,7 +11,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@algorandfoundation/algokit-utils": "^8.2.2",
+    "@algorandfoundation/algokit-utils": "^9.1.1",
     "@awesome-algorand/store-kit": "*",
     "@blockshake/defly-connect": "^1.2.1",
     "@jsonforms/react": "^3.5.1",

@@ -13,19 +13,3 @@ import { withLoading } from "@/hooks/use-loading.tsx";
 export function UseWallet({ children }: { children: ReactNode }) {
   return <WalletProvider manager={walletManager}>{children}</WalletProvider>;
 }
-function withWallet<TProps>(Component: any) {
-  return (props: TProps) => {
-    const manager = useWallet();
-    return <Component manager={manager} {...props} />;
-  };
-}
-export function withManager<TProps>(Component: any) {
-  return (props: TProps) => {
-    const HoC = withWallet<TProps>(withLoading<TProps>(Component));
-    return (
-      <UseWallet>
-        <HoC {...props} />
-      </UseWallet>
-    );
-  };
-}

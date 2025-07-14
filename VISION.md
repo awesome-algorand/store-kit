@@ -16,7 +16,8 @@ you can easily store and retrieve data from the blockchain and map it to a more 
 ![chart.png](chart.png)
 
 ### How:
-KISS and Leverage lodash paths for JSON, which are similar to jq
+Convert the Objects into addressed arrays.
+This example uses the KISS principle and leverages lodash paths for JSON, which are similar to `jq`
 
 The following JSON:
 ```json
@@ -39,7 +40,7 @@ orm_person.lastName: "Bassi"
 - DID Documents
 - JSON Metadata commonly stored in IPFS
 - Protocols that wish to standardize their box keys
-
+- Services that wish to provide indexed data
 
 ### Known Limitations:
 
