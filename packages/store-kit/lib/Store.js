@@ -343,13 +343,15 @@ export class Store extends BaseStore {
                 this.client = appClient;
                 this.appId = appClient.appId;
                 await this.save();
-                this.status = "ready";
+                this.setState(() => {
+                    this.status = "ready";
+                    return this.state;
+                });
             }
         }
         else {
             console.log(`${TAG} 🍻 Welcome back! Loading existing store: ${name}`);
             this.appId = this.client.appId;
-            this.status = "loading";
             const boxData = await this.assemble();
             this.setState(() => {
                 this.status = "ready";

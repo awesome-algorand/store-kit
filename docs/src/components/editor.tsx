@@ -24,18 +24,20 @@ type EditorProps = {
   onAdd: JSONEdit.UpdateFunction;
   onUpdate: JSONEdit.UpdateFunction;
   onEdit: JSONEdit.UpdateFunction;
-  onDeploy: () => void;
   error: Error | null;
   app: AppMetadata;
   isLoading: boolean;
 };
 const ROOT = "[StoreKit]";
 export function Editor(props: EditorProps) {
-  const { app, error, onChange, onDelete, onAdd, onUpdate, onEdit, onDeploy } =
-    props;
+  const { app, error, onChange, onDelete, onAdd, onUpdate, onEdit } = props;
+
+  // TODO: move to controller
   const bears = useStore(bearStore);
   const manager = useWallet();
   const { activeNetwork } = useNetwork();
+  const controls = useControls();
+
   return (
     <div className="not-content min-h-64">
       <div className="text-lg text-gray-500 mb-2" style={{ marginTop: "10px" }}>
@@ -47,7 +49,7 @@ export function Editor(props: EditorProps) {
             <p className="text-lg truncate">
               {"Use the "}
               {<strong>Form Preview</strong>}
-              {" to test the application"}
+              {" found bellow to test the application"}
             </p>
             <div className="truncate text-lg no-underline decoration-none">
               {`ID: ${app.appId} 🎉 `}
@@ -87,7 +89,7 @@ export function Editor(props: EditorProps) {
               className={"ml-2"}
               onClick={async () => {
                 await bearStore.init(undefined, true);
-                onDeploy();
+                controls.setAppId(bearStore.appId!!);
               }}
             >
               Deploy

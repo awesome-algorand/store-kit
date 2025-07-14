@@ -9,6 +9,7 @@ import { UseControls, useControls } from "@/components/controls.hooks.tsx";
 import { useWallet } from "@txnlab/use-wallet-react";
 import { useLoading } from "@/hooks/use-loading.tsx";
 import { UseWallet } from "@/hooks/use-wallet.tsx";
+import { EditorController } from "@/components/editor.controller.tsx";
 
 /**
  * Handles the preview interaction and data state synchronization logic for rendering a preview
@@ -106,6 +107,7 @@ export const PreviewIsland = () => {
   return (
     <UseWallet>
       <UseControls>
+        <EditorController />
         <PreviewController />
       </UseControls>
     </UseWallet>

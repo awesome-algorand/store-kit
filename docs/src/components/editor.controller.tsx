@@ -1,4 +1,3 @@
-import type { WalletManager } from "@txnlab/use-wallet";
 import { useStore } from "@tanstack/react-store";
 import { bearStore } from "@/store.ts";
 import React, { useEffect, useState } from "react";
@@ -52,9 +51,6 @@ export function EditorController() {
           keys: toPaths(demo).length,
         },
       }}
-      onDeploy={() => {
-        window.location.reload();
-      }}
       onChange={({ newValue, name }) => {
         return newValue;
       }}
@@ -89,14 +85,3 @@ export function EditorController() {
     />
   );
 }
-
-export const EditorIsland = () => {
-  return (
-    <UseWallet>
-      <UseControls>
-        <EditorController />
-      </UseControls>
-    </UseWallet>
-  );
-};
-export default EditorIsland;

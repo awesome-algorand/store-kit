@@ -30,6 +30,7 @@ export type ControlsContextState = {
   isError: Error | null;
   setError: (error: Error) => void;
   state: ControlState;
+  setAppId: (appId: bigint) => void;
 };
 export const ControlsContext = createContext<ControlsContextState | null>(null);
 
@@ -105,6 +106,9 @@ export function UseControls({ children }: { children: ReactNode }) {
               keys: bearStore.toChunks().flatMap((v) => v).length,
             },
           },
+        },
+        setAppId: (appId: bigint) => {
+          setAppId(appId);
         },
       }}
     >
