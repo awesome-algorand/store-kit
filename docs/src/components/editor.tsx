@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useStore } from "@tanstack/react-store";
 import { bearStore } from "@/store.ts";
 import * as JSONEdit from "json-edit-react";
 import { Button } from "./ui/button";
 import { ModalToggle } from "@/components/wallet/modal-toggle.tsx";
 import { useNetwork, useWallet } from "@txnlab/use-wallet-react";
+import { useControls } from "@/components/controls.hooks.tsx";
+import { toMBR, toPaths } from "@awesome-algorand/store-kit/objects";
 
 type AppMetadata = {
   appId: number | null;
@@ -22,13 +24,15 @@ type EditorProps = {
   onAdd: JSONEdit.UpdateFunction;
   onUpdate: JSONEdit.UpdateFunction;
   onEdit: JSONEdit.UpdateFunction;
+  onDeploy: () => void;
   error: Error | null;
   app: AppMetadata;
   isLoading: boolean;
 };
 const ROOT = "[StoreKit]";
 export function Editor(props: EditorProps) {
-  const { app, error, onChange, onDelete, onAdd, onUpdate, onEdit } = props;
+  const { app, error, onChange, onDelete, onAdd, onUpdate, onEdit, onDeploy } =
+    props;
   const bears = useStore(bearStore);
   const manager = useWallet();
   const { activeNetwork } = useNetwork();
@@ -77,8 +81,17 @@ export function Editor(props: EditorProps) {
         )}
         {!app.appId && manager.activeWallet && (
           <div>
-            Application not found, deploy a fresh Store using the{" "}
-            <strong>Deploy</strong> button
+            Application not found, deploy a fresh Store:
+            <Button
+              variant="secondary"
+              className={"ml-2"}
+              onClick={async () => {
+                await bearStore.init(undefined, true);
+                onDeploy();
+              }}
+            >
+              Deploy
+            </Button>
           </div>
         )}
       </div>

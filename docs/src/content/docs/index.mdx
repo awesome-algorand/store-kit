@@ -8,7 +8,6 @@ import { Aside, Code, LinkCard, Tabs, TabItem } from '@astrojs/starlight/compone
 import EditorIsland from '@/components/editor.island.tsx';
 import PreviewIsland from '@/components/preview.island.tsx';
 import ControlsIsland from '@/components/controls.island.tsx';
-import CodeIsland from '@/components/code.island.tsx';
 
 <Aside type="danger">This project is in an experimental state, it is only to illustrate what can be built.
   It is not production grade or officially endorsed.</Aside>
@@ -16,28 +15,19 @@ import CodeIsland from '@/components/code.island.tsx';
 
 <Tabs>
   <ControlsIsland client:only="react"/>
-    <TabItem label="Editor">
+    <TabItem label="State">
       <EditorIsland client:only="react"/>
     </TabItem>
     <TabItem label="Form Preview">
       <PreviewIsland client:load />
     </TabItem>
 </Tabs>
-<h4>store.ts</h4>
-<Tabs>
-  <TabItem label="@txnlab/use-wallet">
-    <CodeIsland client:only="react" type="txnlab"/>
-  </TabItem>
-  <TabItem label="@algorandfoundation/algokit-utils">
-    <CodeIsland client:load type="algokit"/>
-  </TabItem>
-</Tabs>
 
 <LinkCard
   title="Find out more"
   href="/justification"
   icon="pencil"
-  description="References, detailed guides and more!"
+  description="References and justification for this project"
 />
 
 <h4>Running this experiment locally</h4>
@@ -60,6 +50,12 @@ Install the dependencies
 algokit bootstrap all
 ```
 
+Ensure algokit is running
+
+```bash
+algokit localnet start
+```
+
 Run the demo
 
 ```bash
@@ -71,9 +67,3 @@ Run the documentation
 ```bash
 npm run dev
 ```
-
-## TODO:
-
-- CRDT Storage or Delta Strategy (Dirty Records)
-- Array/Object index management
-- Bulk Delete Nested Object Keys

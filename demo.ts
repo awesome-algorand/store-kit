@@ -211,7 +211,7 @@ await Promise.all(
     store.setAlgorand(algorand);
     store.setManager(manager);
     await mutex.runExclusive(async () => {
-      await store.init(`user-${user.appId.toString()}`);
+      await store.init(`user-${user.appId.toString()}`, true);
       console.log(await store.assemble());
     });
   }),
@@ -225,7 +225,7 @@ await Promise.all(
     store.setAlgorand(algorand);
     store.setManager(manager);
     await mutex.runExclusive(async () => {
-      await store.init(`location-${user.appId.toString()}`);
+      await store.init(`location-${user.appId.toString()}`, true);
       console.log(await store.assemble());
     });
   }),

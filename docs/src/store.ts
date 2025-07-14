@@ -9,29 +9,12 @@ import { Store as StoreKit } from "@awesome-algorand/store-kit";
 import { AlgorandClient } from "@algorandfoundation/algokit-utils";
 import { ClientManager } from "@algorandfoundation/algokit-utils/types/client-manager";
 import { QueryClient } from "@tanstack/react-query";
-export function shuffle(ingress: unknown[]) {
-  const arr = structuredClone(ingress);
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
-  }
-  return arr;
-}
+// Disable prompt for password
 globalThis.prompt = () => {
   return "";
 };
 export const options = {
-  wallets: shuffle([
-    WalletId.KMD,
-    WalletId.DEFLY,
-    WalletId.PERA,
-    {
-      id: WalletId.LUTE,
-      options: { siteName: "Use Wallet Islands" },
-    },
-  ]),
+  wallets: [WalletId.KMD],
   defaultNetwork: NetworkId.LOCALNET,
 };
 
@@ -76,14 +59,15 @@ const algorand = AlgorandClient.fromClients({
 export const isModalOpen = new Store(false);
 
 export const queryClient = new QueryClient();
-export const bearStore = new StoreKit({
+
+export const DEFAULT_STATE = {
   count: 5,
   type: "Grizzly",
-  // @ts-ignore
-})
+};
+export const bearStore = new StoreKit(DEFAULT_STATE, { sync: false })
   .setAlgorand(algorand)
   .setManager(walletManager);
 
 if (walletManager.activeAddress) {
-  bearStore.init(undefined, false);
+  bearStore.init();
 }

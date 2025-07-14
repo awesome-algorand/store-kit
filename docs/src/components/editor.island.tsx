@@ -2,7 +2,6 @@ import type { WalletManager } from "@txnlab/use-wallet";
 import { useStore } from "@tanstack/react-store";
 import { bearStore } from "@/store.ts";
 import React, { useEffect, useState } from "react";
-import type { OnChangeFunction } from "json-edit-react";
 import { toMBR, toPaths } from "@awesome-algorand/store-kit/objects";
 import { UseWallet } from "@/hooks/use-wallet.tsx";
 import { Editor } from "@/components/editor.tsx";
@@ -29,7 +28,6 @@ export function EditorController() {
   // Handle changes from the Store
   useEffect(() => {
     if (isLoading || bearStore.status !== "ready") return;
-    console.log(`[Editor] Updating JSON Data ${Object.keys(demo).length}`);
     setJson(
       JSON.stringify(
         demo,
@@ -37,7 +35,7 @@ export function EditorController() {
         2,
       ),
     );
-  }, [demo]);
+  }, [demo, controls, bearStore]);
 
   return (
     <Editor
@@ -53,6 +51,9 @@ export function EditorController() {
           mbr: Number(toMBR(demo).microAlgo().algos),
           keys: toPaths(demo).length,
         },
+      }}
+      onDeploy={() => {
+        window.location.reload();
       }}
       onChange={({ newValue, name }) => {
         return newValue;

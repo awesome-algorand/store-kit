@@ -72,7 +72,6 @@ export function UseControls({ children }: { children: ReactNode }) {
     if (!manager.activeAddress || !manager.isReady || !bearStore.client) return;
     bearStore.assemble().then((boxData) => {
       const result = toMBR(deepMerge(bears, boxData)).microAlgo();
-      console.log("[Starlight Docs] Assembling MBR", result);
       setMBR(result);
     });
   }, [bears]);

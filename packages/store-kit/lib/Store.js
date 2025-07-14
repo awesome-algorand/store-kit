@@ -5,7 +5,7 @@ import { decodeAddress } from "algosdk";
 import { LodashFactory } from "./lodash/index.js";
 import { deepMerge, diff, fromBoxes, toChunks, toMBR, } from "./objects/index.js";
 import { ACTIVE_ADDRESS_REQUIRED, ALGORAND_CLIENT_REQUIRED, TYPED_CLIENT_EXISTS, TYPED_CLIENT_REQUIRED, WALLET_MANAGER_EXISTS, WALLET_MANAGER_REQUIRED, } from "./errors";
-import { getClient, NotFoundError } from "./clients.js";
+import { getClient } from "./clients.js";
 import { PREFIX } from "./objects/constants.js";
 import get from "lodash.get";
 const TAG = supportsColor
@@ -135,12 +135,12 @@ export class Store extends BaseStore {
      *
      * @param {TState} initialState initial data to populate the store with
      */
-    constructor(initialState) {
+    constructor(initialState, options = {}) {
         super(initialState, {
             onUpdate: async () => {
-                console.log(`${TAG} 🔀 Updated State ${this.status}`, this.state);
+                console.log(`${TAG} 🔀 Updated State (${this.status})`, this.state);
                 // Handle dirty state saves, skip the initial loading event
-                if (this.client && this.deltas.size > 0) {
+                if (this.client && this.deltas.size > 0 && options?.sync) {
                     // Regularly just save
                     await this.save();
                     this.deltas.clear();
@@ -150,7 +150,7 @@ export class Store extends BaseStore {
             updateFn: (previous) => {
                 return (updater) => {
                     const nextState = updater(previous);
-                    console.log(`${TAG} ⚡️ Emit state change (${this.status})`, diff(previous, nextState));
+                    console.log(`${TAG} ⚡️ Emit state change (${this.status})`, diff(previous, nextState), previous, nextState);
                     if (this.client) {
                         diff(previous, nextState).forEach((kv) => this.deltas.set(...kv));
                     }
@@ -278,6 +278,25 @@ export class Store extends BaseStore {
         }
         return this;
     }
+    async findExistingClient(name) {
+        if (!this.algorand) {
+            throw new Error(ALGORAND_CLIENT_REQUIRED);
+        }
+        if (!this.deployer && !this.appId) {
+            throw new Error("Deployer and AppId are required to find an existing client");
+        }
+        // Try to find an existing client
+        try {
+            return await getClient(this.algorand, this.appId
+                ? this.appId
+                : this.deployer
+                    ? this.deployer.addr.toString()
+                    : null, name);
+        }
+        catch (e) {
+            return null;
+        }
+    }
     /**
      * Initializes the store with the provided configurations.
      * This method sets up a client instance, handles deployment if necessary, and syncs the state as required.
@@ -287,7 +306,7 @@ export class Store extends BaseStore {
      * @throws Error Will throw an error if a client already exists, if the Algorand client is missing,
      *         or if required prerequisites for initialization or deployment are not met.
      */
-    async init(name = "Lodash", sync = true) {
+    async init(name = "Lodash", sync = false) {
         console.log(`${TAG} 🎉 Initializing Store with ${name} ${sync ? "and syncing" : "without syncing"}`);
         // Client should not exist
         if (this.client) {
@@ -297,14 +316,37 @@ export class Store extends BaseStore {
         if (!this.algorand) {
             throw new Error(ALGORAND_CLIENT_REQUIRED);
         }
-        // TODO: Think about this problem a bit more, possibly at the ORM/Registry level
-        try {
-            // Try to find an existing client
-            this.client = await getClient(this.algorand, this.appId
-                ? this.appId
-                : this.deployer
-                    ? this.deployer.addr.toString()
-                    : null, name);
+        // Try to find an existing client
+        this.client = await this.findExistingClient(name);
+        if (this.client === null) {
+            // Exit early when we cannot deploy
+            if (sync && !this.deployer) {
+                throw new Error(ACTIVE_ADDRESS_REQUIRED);
+            }
+            // Handle deploying the contracts
+            if (sync && this.deployer) {
+                console.log(`${TAG} 🚀 Deploying App: ${name}`);
+                const factory = this.algorand.client.getTypedAppFactory(LodashFactory, {
+                    deletable: true,
+                    defaultSender: this.deployer.addr,
+                    defaultSigner: this.deployer.signer,
+                });
+                const { appClient } = await factory.deploy({
+                    onUpdate: "append",
+                    onSchemaBreak: "append",
+                    appName: name,
+                });
+                await appClient.appClient.fundAppAccount({
+                    amount: toMBR(this.state).microAlgo(),
+                    sender: this.deployer.addr,
+                });
+                this.client = appClient;
+                this.appId = appClient.appId;
+                await this.save();
+                this.status = "ready";
+            }
+        }
+        else {
             console.log(`${TAG} 🍻 Welcome back! Loading existing store: ${name}`);
             this.appId = this.client.appId;
             this.status = "loading";
@@ -313,42 +355,6 @@ export class Store extends BaseStore {
                 this.status = "ready";
                 return boxData;
             });
-        }
-        catch (e) {
-            if (e instanceof NotFoundError) {
-                // Exit early when we cannot deploy
-                if (sync && !this.deployer) {
-                    throw new Error(ACTIVE_ADDRESS_REQUIRED);
-                }
-                // Handle deploying the contracts
-                if (sync && this.deployer) {
-                    console.log(`${TAG} 🚀 Deploying App: ${name}`);
-                    const factory = this.algorand.client.getTypedAppFactory(LodashFactory, {
-                        deletable: true,
-                        defaultSender: this.deployer.addr,
-                        defaultSigner: this.deployer.signer,
-                    });
-                    const { appClient } = await factory.deploy({
-                        onUpdate: "append",
-                        onSchemaBreak: "append",
-                        appName: name,
-                    });
-                    await appClient.appClient.fundAppAccount({
-                        amount: toMBR(this.state).microAlgo(),
-                        sender: this.deployer.addr,
-                    });
-                    this.client = appClient;
-                    this.appId = appClient.appId;
-                    await this.save();
-                    this.status = "ready";
-                }
-                else {
-                    throw e;
-                }
-            }
-            else {
-                throw e;
-            }
         }
         return this;
     }
@@ -479,20 +485,13 @@ export class Store extends BaseStore {
         }
         return await fromBoxes(this.algorand, this.client?.appId);
     }
-    async destroy() {
-        if (!this.algorand) {
-            throw new Error(ALGORAND_CLIENT_REQUIRED);
-        }
-        if (!this.client) {
-            throw new Error(TYPED_CLIENT_REQUIRED);
-        }
-        const names = await this.algorand.app.getBoxNames(this.client.appId);
-        console.log(names);
-        await this.client.send.delete.bare({
-            sender: this.deployer.addr,
-            signer: this.deployer.signer,
-            boxReferences: names.map((box) => box.name),
-        });
+    async destroy(state) {
+        this.appId = null;
+        this.client = null;
+        this.deployer = null;
+        this.manager = null;
+        this.deltas = new Map();
+        this.setState(() => state);
     }
 }
 //# sourceMappingURL=Store.js.map

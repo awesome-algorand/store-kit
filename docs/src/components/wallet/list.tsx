@@ -3,7 +3,13 @@ import clsx from "clsx";
 import { useNetwork, useWallet } from "@txnlab/use-wallet-react";
 import { NetworkId, WalletId } from "@txnlab/use-wallet";
 
-export function List({ className }: { className?: string }) {
+export function List({
+  className,
+  onConnect,
+}: {
+  onConnect: () => void;
+  className?: string;
+}) {
   const walletManager = useWallet();
   const { activeNetwork } = useNetwork();
 
@@ -27,7 +33,10 @@ export function List({ className }: { className?: string }) {
         .map((wallet) => (
           <button
             key={wallet.id}
-            onClick={wallet.connect}
+            onClick={async () => {
+              await wallet.connect();
+              onConnect();
+            }}
             className="gap-2 p-2 text-sm flex items-center max-h-10 overflow-hidden"
             role="menuitem"
             tabIndex={-1}

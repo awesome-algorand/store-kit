@@ -120,7 +120,9 @@ export declare class Store<TState> extends BaseStore<TState> implements StoreInt
      *
      * @param {TState} initialState initial data to populate the store with
      */
-    constructor(initialState: TState);
+    constructor(initialState: TState, options?: {
+        sync?: boolean;
+    });
     balance(): Promise<bigint>;
     setAccount(deployer: Deployer | null, sync: boolean): this;
     setAppId(appId: bigint, sync: boolean): Promise<this>;
@@ -145,6 +147,7 @@ export declare class Store<TState> extends BaseStore<TState> implements StoreInt
      * @param sync
      */
     setClient(client: LodashClient, sync?: boolean): Promise<Store<TState>>;
+    findExistingClient(name?: string): Promise<LodashClient | null>;
     /**
      * Initializes the store with the provided configurations.
      * This method sets up a client instance, handles deployment if necessary, and syncs the state as required.
@@ -195,5 +198,5 @@ export declare class Store<TState> extends BaseStore<TState> implements StoreInt
      * @throws {TypeError} Throws an error if the client is undefined, indicating that initialization has not been completed.
      */
     assemble(): Promise<TState>;
-    destroy(): Promise<void>;
+    destroy(state: TState): Promise<void>;
 }
